@@ -12,3 +12,4 @@ then run the code by
 npm start
 ```
 
+If all is well you should be able to access the site on: http://localhost:8787
