@@ -1,0 +1,117 @@
+extend templates/layout.pug
+
+block content
+    -
+        var jar = {
+            "displayName": "Kgothatso Ngako",
+            "description": "Contribute towards the creation of more shit.",
+            "img": {
+                "src": "img/k.svg"
+            },
+            "slots": [
+                {
+                    "type": "patreon",
+                    "name": "Patreon",
+                    "callToAction": "become a patreon",
+                    "link": "http://patreon.com/kngako",
+                    "img": {
+                        "src": "img/patreon_logo.svg"
+                    }
+                },
+                {
+                    "type": "paypal.me",
+                    "name": "Paypal.me",
+                    "callToAction": "tip me",
+                    "link": "http://paypal.me/kngako",
+                    "img": {
+                        "src": "img/paypal.svg"
+                    }
+                },
+                {
+                    "type": "payfast",
+                    "name": "Payfast",
+                    "callToAction": "pay me",
+                    "link": "http://payfast.com/kngako",
+                    "img": {
+                        "src": "img/payfast.svg"
+                    }
+                },
+                {
+                    "type": "bitcoin",
+                    "name": "Bitcoin",
+                    "callToAction": "tip me",
+                    "link": "bitcoin:1EeBSsYNZn7C5BHpTbhfm93tnGPyAoTDCY",
+                    "address": "1EeBSsYNZn7C5BHpTbhfm93tnGPyAoTDCY",
+                    "img": {
+                        "src": "img/bitcoin.svg"
+                    }
+                },
+                {
+                    "type": "litecoin",
+                    "name": "Litecoin",
+                    "callToAction": "tip me",
+                    "link": "litecoin:LQKSHezcC1MgZJC6j6v8FKtLZKujEQn3RX",
+                    "address": "LQKSHezcC1MgZJC6j6v8FKtLZKujEQn3RX",
+                    "img": {
+                        "src": "img/litecoin.svg"
+                    }
+                },
+                {
+                    "type": "ethereum",
+                    "name": "Ethereum",
+                    "callToAction": "tip me",
+                    "link": "ethereum:0x6E9341cE50Cd1fCdf649E71f19976059943C0D62",
+                    "address": "0x6E9341cE50Cd1fCdf649E71f19976059943C0D62",
+                    "img": {
+                        "src": "img/ethereum.svg"
+                    }
+                }
+            ]
+        }
+    .container
+        
+        //- Header section on large screen
+        
+        .row.valign-wrapper
+            .col.l2.hide-on-small-only
+                br
+                img.responsive-img(src=jar.img.src)
+            .col.l10
+                //- TODO: Replace h1 with feed heading...
+                h1.jar-header= jar.displayName
+                //- Replace with actual
+                p.flow-text= jar.description
+
+        //- Same header section for small screen
+        //- .hide-on-med-and-up
+            .row
+                .col.s12
+                    h2= jar.displayName
+                    p.flow-text= jar.description
+                //- .col.s12
+                //-     img.responsive-img(src=jar.img.src) 
+                    //- TODO: May set image is background...
+
+        .container
+            .row
+                each slot in jar.slots
+                    .col.s12.l6
+                        a(href=slot.link)
+                            .row
+                                .col.s4.slot-space
+                                    img.slot-img(src=slot.img.src) 
+                                .col.s8.center.slot-space.green
+                                    .call-to-action
+                                        p.black-text.green.flow-text= slot.callToAction
+
+block footer
+    footer.page-footer.green(role="navigation")
+        .row
+            .col.s12
+                <div class="container">
+                    //- span &copy;  2017 <a href="https://kngako.com" target="_blank" class="black-text">Kgothatso Ngako
+                    <a class="black-text text-lighten-4 right" href="/"  target="_blank">Powered by Money Jar</a>
+                </div>
+        //- <div class="footer-copyright">
+        //-     <div class="container">&copy;  2017 <a href="https://kngako.com" target="_blank" class="black-text">Kgothatso Ngako<a class="black-text text-lighten-4 right" href="http://eregardless.com"  target="_blank">{e}regardless</a></div>
+        //- </div>

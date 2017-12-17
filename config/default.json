@@ -1,0 +1,33 @@
+{
+    "bcrypt" : {
+        // Salt value to be used in bcrypt hashing...
+        "salt" : 2
+    },
+    "database" : {
+        // For dev purposes this works like a charm...
+        "dialect" : "sqlite",
+        "host" : "localhost",
+        "database" : "moneyjar",
+        "username" : "jar",
+        "password" : "money",
+        "storage" : "db/database.sqlite"
+    },
+    "server" : {
+        // Unique sercret key to be used on the express cookies...
+        "domain": "jar.money",
+        "secret" : "it feels like everything is falling down...",
+        "port" : 8787
+    },
+    "email" : {
+        // Unique sercret key to be used on the express cookies...
+        // Follow these http://masashi-k.blogspot.co.za/2013/06/sending-mail-with-gmail-using-xoauth2.html
+        "maxConfirmationEmails": 5,
+        "testEmail":"email@recieveTest.co.za",
+        "adminEmail" : "admin@jar.money",
+        "clientId" : "",
+        "clientSecret" : "",
+        // Get the refreshtoken from the play ground https://developers.google.com/oauthplayground/
+        "refreshToken" : "",
+        "accessToken" : ""
+    }
+}

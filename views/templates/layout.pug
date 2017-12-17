@@ -1,0 +1,68 @@
+doctype html
+html(lang="en")
+    head
+        <meta charset="utf-8">
+        //- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
+        <link type="text/css" rel="stylesheet" href="/css/site.css"  media="screen,projection"/>
+        
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <link rel="icon" type="image/png" href="img/favicon.png"/>
+
+        //- SEO stuff goes here...
+        block seo
+            title Jar Money - Fille the Money Jar
+            <meta name="description" content="The url shortener that allows you to aggregate platforms which you accept payments on">
+            //- TODO: Add facebook graph stuff
+            //- TODO: Add twitter Card stuff
+    body
+        header(role="banner")
+            
+            nav.green
+                .container
+                    .nav-wrapper
+                        a.brand-logo(href="/") Money Jar
+                        ul#nav-mobile.hide-on-med-and-down.right
+                            li
+                                <a href="/open-jar">Open Your Jar</a>
+                            //- li
+                                <a href="/explore">Explore Jars</a>
+        
+        main(role="main")
+            .container.center
+                p Under developement
+            block content
+                .container
+                    p.flow-text Show love and support
+
+            
+
+        block footer
+            footer.page-footer.green(role="navigation")
+                <div class="container">
+                    <div class="row">
+                    <div class="col l6 s12">
+                        <h5 class="white-text">The Money Jar</h5>
+                        <p class="grey-text text-lighten-4">Drop a few coins in the money jar.</p>
+                    </div>
+                    <div class="col l4 offset-l2 s12">
+                        <h5 class="white-text">Plug</h5>
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://github.com/kngako/jar,money.git">Github</a></li>
+                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kngako">Twitter</a></li>
+                            <li><a class="grey-text text-lighten-3" href="https://facebook.com/lawreat">Facebook</a></li>
+                        </ul>
+                    </div>
+                    </div>
+                </div>
+                <div class="footer-copyright">
+                    <div class="container">&copy;  2017 <a href="https://kngako.com" target="_blank" class="black-text">Kgothatso Ngako<a class="black-text text-lighten-4 right" href="http://eregardless.com"  target="_blank">{e}regardless</a></div>
+                </div>
+        
+        //- TODO: Add a condition to use cdn in production...
+        <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="/js/materialize.min.js"></script>
+        <script type="text/javascript" src="/js/site.js"></script>
