@@ -4,7 +4,8 @@
   "description": "Smart URL shortener for payments and the likes",
   "main": "jar-money.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node jar-money.js"
   },
   "keywords": [
     "payments"
