@@ -1,15 +1,15 @@
 module.exports = function (options) {
-    var model = options.sequelize.define(options.TABLE_NAMES.LOCATION, {
+    var model = options.sequelize.define("location", {
         id: {
             type: options.Sequelize.BIGINT,
             primaryKey: true,
             unique: true,
             autoIncrement: true  
         },
-        name: {
+        addressLine1: {
             type: options.Sequelize.STRING
         },
-        description: {
+        addressLine2: {
             type: options.Sequelize.TEXT
         },
         country: {

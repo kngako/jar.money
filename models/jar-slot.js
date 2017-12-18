@@ -1,5 +1,5 @@
 module.exports = function (options) {
-    var model = options.sequelize.define(options.TABLE_NAMES.USER_ROLE, {
+    var model = options.sequelize.define("jar_slot", {
         // Attributes...
         id: {
             type: options.Sequelize.UUID,

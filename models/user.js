@@ -1,5 +1,5 @@
 module.exports = function (options) {
-    var model = options.sequelize.define(options.TABLE_NAMES.USER, {
+    var model = options.sequelize.define("user", {
         id: {
             type: options.Sequelize.UUID,
             defaultValue: options.Sequelize.UUIDV4,
