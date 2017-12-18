@@ -1,5 +1,5 @@
 module.exports = function (options) {
-    var model = options.sequelize.define("img", {
+    var model = options.sequelize.define("image", {
         // Attributes...
         id: {
             type: options.Sequelize.UUID,

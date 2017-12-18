@@ -41,9 +41,14 @@ module.exports = function (config) {
     // TODO: Import the modules...
     db.User = require('./models/user.js')(dbOptions);
     db.Role = require('./models/role.js')(dbOptions);
-    db.UserRole = require('./models/userrole.js')(dbOptions);
+    db.UserRole = require('./models/user_role.js')(dbOptions);
     db.Location = require('./models/location.js')(dbOptions);
     db.Confirmation = require('./models/confirmation.js')(dbOptions);
+    db.Jar = require('./models/confirmation.js')(dbOptions);
+    db.JarSlot = require('./models/confirmation.js')(dbOptions);
+    db.Image = require('./models/image.js')(dbOptions);
+    db.Slot = require('./models/slot.js')(dbOptions);
+    db.Click = require('./models/click.js')(dbOptions);
     
     // Time for the associations...
     // User 1:N associations
@@ -57,6 +62,15 @@ module.exports = function (config) {
     // Roles 1:N associations...
     db.Role.UserRoles = db.Role.hasMany(db.UserRole);
     db.UserRole.belongsTo(db.Role);
+
+    db.Jar.Image = db.Jar.hasOne(db.Image);
+
+    db.JarSlot.Jar = db.JarSlot.hasOne(db.Jar);
+    db.JarSlot.Slot = db.JarSlot.hasOne(db.Slot); // TODO: make allow null to false...
+
+    db.Slot.Image = db.Slot.hasOne(db.Image);
+
+    db.Click.JarSlot = db.Click.hasOne(db.JarSlot);
 
     db.LoadDB = (callback) => {
         dbOptions.sequelize.sync()
