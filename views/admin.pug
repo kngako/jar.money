@@ -1,0 +1,56 @@
+extend templates/layout.pug
+
+block content
+    -
+        // Slots are only seen and edited by admins...
+        
+    .container
+        h1 Money Jars 
+            a.btn(href="/open-jar") Add New Jar
+
+        .row
+            
+                .col.s12
+                    table.bordered
+                        thead
+                            tr
+                                th Short Code
+                                th Display Name
+                                th Description
+                                th # of Jar Slots
+
+                        tbody
+                            each jar in jars
+                                tr
+                                    td
+                                        a(href="/jar/"+jar.shortCode)= jar.shortCode
+                                    td 
+                                        a(href="/jar/"+jar.shortCode)= jar.displayName
+                                    td 
+                                        a(href="/jar/"+jar.shortCode)= jar.description
+                                    td 
+                                        a(href="/jar/"+jar.shortCode)= jar.jarSlots.length
+
+        //- TODO: Show all available slots if user is admin...
+        if slots
+            h2 Slots 
+                a.btn(href="/slot") Add New Slot
+            table.bordered
+                thead
+                    tr
+                        th Name
+                        th Type
+                        th Scheme
+                        th Hint
+                        th Call To Action
+                tbody
+                    each slot in slots 
+                        tr
+                            td
+                                a(href="/slot/" + slot.id)= slot.name
+                            td= slot.type
+                            td= slot.scheme
+                            td= slot.hint
+                            td= slot.callToAction
+        
+        br

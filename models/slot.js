@@ -19,14 +19,14 @@ module.exports = function (options) {
             type: options.Sequelize.STRING,
             allowNull: false
         },
-        link: {
+        scheme: {
             type: options.Sequelize.STRING,
             allowNull: false
         },
-        address: {
+        hint: {
             type: options.Sequelize.STRING,
             allowNull: false
-        },
+        }
     });
 
     return model;

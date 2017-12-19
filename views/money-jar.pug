@@ -5,23 +5,39 @@ block content
         var jar = {
             "displayName": "Kgothatso Ngako",
             "description": "Contribute towards the creation of more shit.",
-            "img": {
+            "image": {
                 "src": "img/k.svg"
             },
             "jarSlots": [
                 {
                     // Allow for stats
+                    "uri": "kngako",
                     "slot": {
                         "type": "patreon",
                         "name": "Patreon",
                         "callToAction": "become a patreon",
-                        "link": "http://patreon.com/kngako",
+                        "scheme": "http://patreon.com/",
+                        "hint": "YourPatreonCreatorUsername",
+                        "image": {
+                            "src": "img/patreon_logo.svg"
+                        }
+                    },
+                },
+                {
+                    // Allow for stats
+                    "uri": "kngako",
+                    "slot": {
+                        "type": "paypal",
+                        "name": "Paypal",
+                        "callToAction": "tip",
+                        "scheme": "http://paypal.me/",
+                        "hint": "YourPaypalMeUsername",
                         "image": {
                             "src": "img/patreon_logo.svg"
                         }
                     },
                 }
-            ]
+            ],
             "slots": [
                 {
                     "type": "patreon",
@@ -89,7 +105,7 @@ block content
         .row.valign-wrapper
             .col.l2.hide-on-small-only
                 br
-                img.responsive-img(src=jar.img.src)
+                img.responsive-img(src=jar.image.src)
             .col.l10
                 //- TODO: Replace h1 with feed heading...
                 h1.jar-header= jar.displayName
@@ -113,7 +129,7 @@ block content
                         a(href=slot.link)
                             .row
                                 .col.s4.slot-space
-                                    img.slot-img(src=slot.img.src) 
+                                    img.slot-img(src=slot.image.src) 
                                 .col.s8.center.slot-space.green
                                     .call-to-action
                                         p.black-text.green.flow-text= slot.callToAction

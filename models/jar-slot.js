@@ -6,7 +6,11 @@ module.exports = function (options) {
             defaultValue: options.Sequelize.UUIDV4,
             primaryKey: true,
             unique: true
-        }
+        },
+        uri: {
+            type: options.Sequelize.STRING,
+            allowNull: false
+        },
     });
 
     return model;
