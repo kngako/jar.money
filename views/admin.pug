@@ -6,12 +6,12 @@ block content
         
     .container
         h1 Money Jars 
-            a.btn(href="/open-jar") Add New Jar
+            a.btn(href="/admin/open/jar") Add New Jar
 
         .row
             
                 .col.s12
-                    table.bordered
+                    table.bordered.responsive-table
                         thead
                             tr
                                 th Short Code
@@ -23,19 +23,19 @@ block content
                             each jar in jars
                                 tr
                                     td
-                                        a(href="/jar/"+jar.shortCode)= jar.shortCode
+                                        a(href="/admin/jar/"+jar.shortCode)= jar.shortCode
                                     td 
-                                        a(href="/jar/"+jar.shortCode)= jar.displayName
+                                        a(href="/admin/jar/"+jar.shortCode)= jar.displayName
                                     td 
-                                        a(href="/jar/"+jar.shortCode)= jar.description
+                                        a(href="/admin/jar/"+jar.shortCode)= jar.description
                                     td 
-                                        a(href="/jar/"+jar.shortCode)= jar.jarSlots.length
+                                        a(href="/admin/jar/"+jar.shortCode)= jar.jarSlots.length
 
         //- TODO: Show all available slots if user is admin...
         if slots
             h2 Slots 
-                a.btn(href="/slot") Add New Slot
-            table.bordered
+                a.btn(href="/admin/slot") Add New Slot
+            table.bordered.responsive-table
                 thead
                     tr
                         th Name
@@ -47,7 +47,7 @@ block content
                     each slot in slots 
                         tr
                             td
-                                a(href="/slot/" + slot.id)= slot.name
+                                a(href="/admin/slot/" + slot.id)= slot.name
                             td= slot.type
                             td= slot.scheme
                             td= slot.hint

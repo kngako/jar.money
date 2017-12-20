@@ -1,0 +1,44 @@
+extend templates/layout.pug
+
+block content
+    .container
+        h1 Money Jar 
+            a.btn(href="/admin/edit/jar/" + jar.shortCode ) Edit Jar
+
+        //- TODO: Show that jar is empty...
+        .row
+            .col.s12.l4.m4
+                p.flow-text
+                    strong Display Name
+                p.flow-text= jar.displayName
+            .col.s12.l8.m8
+                p.flow-text
+                    strong Description
+                p.flow-text= jar.description
+
+        
+        .row
+            .col.s12
+                h2 Jar Slots 
+                    a.btn(href="/admin/edit/jar/" + jar.shortCode +"/jar-slot/") Add Jar Slot
+            if jar.jarSlots
+                .col.s12
+                    table.bordered.responsive-table
+                        thead
+                            tr
+                                th Name
+                                th Call To Action
+                                th Link
+                                //- th 
+                                    a.btn.hide-on-small-only(href="/jar-slot/") Add Jar Slot
+                                    a.hide-on-med-and-up(href="/jar-slot/") Add Jar Slot
+                        tbody
+                            each jarSlot in jar.jarSlots
+                                tr
+                                    td
+                                        a(href="/admin/edit/jar/" + jar.shortCode +"/jar-slot/" + jarSlot.id)= jarSlot.slot.name
+                                    td= jarSlot.slot.callToAction
+                                    td= jarSlot.slot.scheme +  jarSlot.uri
+                                    //- TODO: Add the clicks...
+
+        br

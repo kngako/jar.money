@@ -30,7 +30,7 @@ module.exports = function (options) {
             response.redirect("/admin");
         });
 
-    router.route('/slot/:slotId')
+    router.route('/admin/slot/:slotId')
         .get(function(request, response, next) {
             // TODO: Render Slot with ID...
             slot = {
@@ -50,13 +50,13 @@ module.exports = function (options) {
         });
 
     
-    router.route('/slot/')
+    router.route('/admin/slot/')
         .get(function(request, response, next) {
             // TODO: Render Slot with ID...
             var slot = {
 
             }
-            response.render("slot", {
+            response.render("edit-slot", {
                 pageTitle: "Money Jar - Slot",
                 slot: slot
             });
@@ -67,7 +67,7 @@ module.exports = function (options) {
             response.redirect("/admin");
         });
 
-    router.route('/jar/:jarId')
+    router.route('/admin/jar/:shortCode')
         .get(function(request, response, next) {
             // TODO: Render Jar with ID...
             var jar = {
@@ -167,7 +167,7 @@ module.exports = function (options) {
                     }
                 ]
             };
-            response.render("jar", {
+            response.render("view-jar", {
                 pageTitle: "Money Jar - Jar",
                 jar: jar
             });
@@ -175,16 +175,96 @@ module.exports = function (options) {
         .post(function(request, response, next) {
             // TODO: Edit this jar
             // TODO: Render edited jar...
-            response.render("jar", {
+            response.render("view-jar", {
                 pageTitle: "Money Jar - Jar"
             });
         });
     
-    router.route('/jar/')
+    router.route('/admin/jar/')
+        .get(function(request, response, next) {
+            // TODO: Render Jar with ID...
+            response.redirect("/admin");
+        })
+        .post(function(request, response, next) {
+            // TODO: Create a slot
+            // TODO: 
+            response.redirect("/admin");
+        });
+
+    router.route('/admin/open/jar')
+        .get(function(request, response, next) {
+            var jar = {};
+            response.render("edit-jar", {
+                pageTitle: "Money Jar - Jar",
+                jar: jar
+            });
+        })
+        .post(function(request, response, next) {
+            // TODO: Create a Jar
+            // TODO: Redirect to Add a slot...
+            response.redirect("/admin/open/jar/:shortCode/jar-slot");
+        });
+
+    router.route('/admin/edit/jar/:shortCode/jar-slot/:slotId')
+        .get(function(request, response, next) {
+            var jar = {
+                shortCode: "kngako",
+                displayName: "Kgothatso Ngako"
+            };
+            var jarSlot = {
+
+            };
+            response.render("edit-jar-slot", {
+                pageTitle: "Money Jar - Jar Slot",
+                heading: "Add new jar slot",
+                jar: jar,
+                jarSlot: jarSlot
+            });
+        })
+        .post(function(request, response, next) {
+            // TODO: Create a Jar
+            // TODO: Redirect to Add a slot...
+            response.redirect("/admin");
+        });
+
+    router.route('/admin/open/jar/:shortCode/jar-slot')
+        .get(function(request, response, next) {
+            var jar = {
+                shortCode: "kngako",
+                displayName: "Kgothatso Ngako"
+            };
+            response.render("edit-jar-slot", {
+                pageTitle: "Money Jar - Jar Slot",
+                heading: "Add new jar slot",
+                jar: jar
+            });
+        })
+        .post(function(request, response, next) {
+            // TODO: Create a Jar
+            // TODO: Redirect to Add a slot...
+            response.redirect("/admin");
+        });
+
+    router.route('/admin/open/jar/:shortCode/jar-slot/plus')
+        .post(function(request, response, next) {
+            // TODO: Create a Jar Slot
+            // TODO: Redirect to Add a slot...
+            var jar = {
+                shortCode: "kngako",
+                displayName: "Kgothatso Ngako"
+            };
+            response.render("edit-jar-slot", {
+                pageTitle: "Money Jar - Jar Slot",
+                heading: "Add another jar slot",
+                jar: jar
+            });
+        });
+
+    router.route('/admin/edit/jar/:shortCode')
         .get(function(request, response, next) {
             // TODO: Render Jar with ID...
             var jar = {};
-            response.render("jar", {
+            response.render("edit-jar", {
                 pageTitle: "Money Jar - Jar",
                 jar: jar
             });
@@ -195,7 +275,7 @@ module.exports = function (options) {
             response.redirect("/admin");
         });
 
-    router.route('/open-jar/')
+    router.route('/admin/open-jar/')
         .get(function(request, response, next) {
             // TODO: Render Jar with ID...
             var jar = {};
@@ -284,9 +364,9 @@ module.exports = function (options) {
             });
         });
 
-    router.route('/:jarId')
+    router.route('/:shortCode')
         .get(function(request, response, next) {
-            // TODO: Search for jar jar and render it in the results
+            // TODO: Search for jar and render it in the results
             var jar = {
                 "displayName": "Kgothatso Ngako",
                 "description": "Contribute towards the creation of more shit.",

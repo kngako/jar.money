@@ -11,6 +11,10 @@ module.exports = function (options) {
             type: options.Sequelize.STRING,
             allowNull: false
         },
+        order: {
+            type: options.Sequelize.INTEGER,
+            allowNull: false
+        },
     });
 
     return model;
