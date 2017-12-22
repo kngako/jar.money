@@ -24,12 +24,9 @@ block content
                                 tr
                                     td
                                         a(href="/admin/jar/"+jar.shortCode)= jar.shortCode
-                                    td 
-                                        a(href="/admin/jar/"+jar.shortCode)= jar.displayName
-                                    td 
-                                        a(href="/admin/jar/"+jar.shortCode)= jar.description
-                                    td 
-                                        a(href="/admin/jar/"+jar.shortCode)= jar.jarSlots.length
+                                    td= jar.displayName
+                                    td= jar.description
+                                    td= jar.jarSlots.length
 
         //- TODO: Show all available slots if user is admin...
         if slots

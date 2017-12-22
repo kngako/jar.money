@@ -7,6 +7,14 @@ block content
 
         //- TODO: Show that jar is empty...
         .row
+            .col.s12
+                p.flow-text.valign-wrapper
+                    strong Copy URL
+                    //- i.material-icons.left content_copy
+                a.flow-text(onclick="copyLink(event)" href="https://jar.money/"+jar.shortCode) 
+                    span#jar-link= "https://jar.money/" + jar.shortCode
+                    i.material-icons.left content_copy
+        .row
             .col.s12.m4
                 p.flow-text
                     strong Display Name
@@ -42,3 +50,16 @@ block content
                                     //- TODO: Add the clicks...
 
         br
+
+    script.
+        function copyLink(event, stuff) {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val($("#jar-link").text()).select();
+            document.execCommand("copy");
+            $temp.remove();
+
+            Materialize.toast('Copied ' + $("#jar-link").text(), 4000);
+
+            event.preventDefault();
+        } 
