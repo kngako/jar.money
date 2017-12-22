@@ -3,7 +3,7 @@ extend templates/layout.pug
 block content
     .container
         h1 Money Jar 
-            a.btn(href="/admin/edit/jar/" + jar.shortCode ) Edit Jar
+            a.btn(href="/admin/jar/" + jar.shortCode + "/edit") Edit Jar
 
         //- TODO: Show that jar is empty...
         .row
@@ -20,7 +20,7 @@ block content
         .row
             .col.s12
                 h2 Jar Slots 
-                    a.btn(href="/admin/edit/jar/" + jar.shortCode +"/jar-slot/") Add Jar Slot
+                    a.btn(href="/admin/jar/" + jar.shortCode +"/jar-slot/") Add Jar Slot
             if jar.jarSlots
                 .col.s12
                     table.bordered.responsive-table
@@ -36,7 +36,7 @@ block content
                             each jarSlot in jar.jarSlots
                                 tr
                                     td
-                                        a(href="/admin/edit/jar/" + jar.shortCode +"/jar-slot/" + jarSlot.id)= jarSlot.slot.name
+                                        a(href="/admin/jar/" + jar.shortCode +"/jar-slot/" + jarSlot.id)= jarSlot.slot.name
                                     td= jarSlot.slot.callToAction
                                     td= jarSlot.slot.scheme +  jarSlot.uri
                                     //- TODO: Add the clicks...
