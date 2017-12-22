@@ -1,0 +1,27 @@
+extend templates/layout.pug
+
+block content
+    .container
+        h1 Slot 
+            a.btn(href="/admin/slot/" + slot.id + "/edit") Edit Slot
+
+        .row
+            .col.s12.l4
+                p.flow-text
+                    strong Name
+                p.flow-text= slot.name
+            .col.s12.l4
+                p.flow-text
+                    strong Scheme
+                p.flow-text= slot.scheme
+            .col.s12.l4
+                p.flow-text
+                    strong Call To Action
+                p.flow-text= slot.callToAction
+            .col.s12
+                .row
+                    .col.s12.slot-space
+                        img.slot-img(src=slot.image.src, alt=slot.name)
+                    .col.s12.center
+                        br
+                        a.btn(href="/admin/image/"+slot.image.id+"/edit") Change Image

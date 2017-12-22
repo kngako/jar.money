@@ -17,7 +17,7 @@ block content
                                 .call-to-action
                                     p.black-text.green.flow-text= slot.callToAction
                     .input-field.col.s12.l6.center
-                        <input placeholder="Jar Link" id="jar_uri" type="text" class="validate" value=#{jarSlot.link}>
+                        <input placeholder="#{slot.hint}" id="jar_uri" type="text" class="validate" value=#{jarSlot.link}>
                         <label for="jar_uri">#{slot.scheme}</label>
                     
                     //- TODO: Have a submit/next button

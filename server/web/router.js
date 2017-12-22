@@ -105,7 +105,9 @@ var slots = [
         "name": "Patreon",
         "callToAction": "become a patreon",
         "scheme": "http://patreon.com/",
+        "hint": "Patreon username",
         "image": {
+            "id":474634,
             "src": "/img/patreon_logo.svg"
         }
     },
@@ -115,18 +117,10 @@ var slots = [
         "name": "Paypal.me",
         "callToAction": "tip me",
         "scheme": "http://paypal.me/",
+        "hint": "paypal.me username",
         "image": {
+            "id":4624276,
             "src": "/img/paypal.svg"
-        }
-    },
-    {
-        "id":"4624672",
-        "type": "payfast",
-        "name": "Payfast",
-        "callToAction": "pay me",
-        "scheme": "https://www.payfast.co.za/eng/process/payment?p=26npruaf2mc2453gh0h0h194k3",
-        "image": {
-            "src": "/img/payfast.svg"
         }
     },
     {
@@ -135,8 +129,10 @@ var slots = [
         "name": "Bitcoin",
         "callToAction": "tip me",
         "scheme": "bitcoin:",
+        "hint": "Bitcoin address",
         "address": "1EeBSsYNZn7C5BHpTbhfm93tnGPyAoTDCY",
         "image": {
+            "id":236745,
             "src": "/img/bitcoin.svg"
         }
     },
@@ -146,8 +142,10 @@ var slots = [
         "name": "Litecoin",
         "callToAction": "tip me",
         "scheme": "litecoin:",
+        "hint": "Litecoin address",
         "address": "LQKSHezcC1MgZJC6j6v8FKtLZKujEQn3RX",
         "image": {
+            "id":4624,
             "src": "/img/litecoin.svg"
         }
     },
@@ -157,8 +155,10 @@ var slots = [
         "name": "Ethereum",
         "callToAction": "tip me",
         "scheme": "ethereum:",
+        "hint": "Ethereum Address",
         "address": "0x6E9341cE50Cd1fCdf649E71f19976059943C0D62",
         "image": {
+            "id":3627,
             "src": "/img/ethereum.svg"
         }
     }
@@ -197,7 +197,7 @@ module.exports = function (options) {
         .get(function(request, response, next) {
             // TODO: Render Slot with ID...
 
-            response.render("slot", {
+            response.render("view-slot", {
                 pageTitle: "Money Jar - Slot",
                 slot: slots[0]
             });
@@ -208,6 +208,19 @@ module.exports = function (options) {
             response.render("slot", {
                 pageTitle: "Money Jar - Slot"
             });
+        });
+
+    router.route('/admin/slot/:slotId/edit')
+        .get(function(request, response, next) {
+            response.render("edit-slot", {
+                pageTitle: "Money Jar - Slot",
+                slot: slots[0]
+            });
+        })
+        .post(function(request, response, next) {
+            // TODO: Create a slot
+            // TODO: 
+            response.redirect("/admin");
         });
 
     
@@ -351,6 +364,20 @@ module.exports = function (options) {
             response.render("edit-jar", {
                 pageTitle: "Money Jar - Jar",
                 jar: jars[0]
+            });
+        })
+        .post(function(request, response, next) {
+            // TODO: Create a slot
+            // TODO: 
+            response.redirect("/admin");
+        });
+
+    router.route('/admin/image/:imageId/edit')
+        .get(function(request, response, next) {
+            // TODO: Add image...
+            response.render("edit-image", {
+                pageTitle: "Money Jar - Image",
+                image: slots[0].image
             });
         })
         .post(function(request, response, next) {
