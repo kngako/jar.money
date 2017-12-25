@@ -9,45 +9,52 @@ block content
             a.btn(href="/admin/open/jar") Add New Jar
 
         .row
-            
-                .col.s12
-                    table.bordered.responsive-table
-                        thead
-                            tr
-                                th Short Code
-                                th Display Name
-                                th Description
-                                th # of Jar Slots
+            .col.s12
+                table.bordered.responsive-table
+                    thead
+                        tr
+                            th Short Code
+                            th Display Name
+                            th Description
+                            th # of Jar Slots
 
-                        tbody
-                            each jar in jars
-                                tr
-                                    td
-                                        a(href="/admin/jar/"+jar.shortCode)= jar.shortCode
-                                    td= jar.displayName
-                                    td= jar.description
-                                    td= jar.jarSlots.length
+                    tbody
+                        each jar in jars
+                            tr
+                                td
+                                    a(href="/admin/jar/"+jar.shortCode)= jar.shortCode
+                                td= jar.displayName
+                                td= jar.description
+                                td= jar.jarSlots.length
+            if jars.length == 0
+                .col.s12.center
+                    p.flow-text You have no money jars
 
         //- TODO: Show all available slots if user is admin...
         if slots
             h2 Administrate Slots 
                 a.btn(href="/admin/slot") Add New Slot
-            table.bordered.responsive-table
-                thead
-                    tr
-                        th Name
-                        th Type
-                        th Scheme
-                        th Hint
-                        th Call To Action
-                tbody
-                    each slot in slots 
-                        tr
-                            td
-                                a(href="/admin/slot/" + slot.id)= slot.name
-                            td= slot.type
-                            td= slot.scheme
-                            td= slot.hint
-                            td= slot.callToAction
-        
+            .row
+                .col.s12
+                    table.bordered.responsive-table
+                        thead
+                            tr
+                                th Name
+                                th Type
+                                th Scheme
+                                th Hint
+                                th Call To Action
+                        tbody
+                            each slot in slots 
+                                tr
+                                    td
+                                        a(href="/admin/slot/" + slot.id)= slot.name
+                                    td= slot.type
+                                    td= slot.scheme
+                                    td= slot.hint
+                                    td= slot.callToAction
+
+                if slots.length == 0
+                    .col.s12.center
+                        p.flow-text System has no slots
         br

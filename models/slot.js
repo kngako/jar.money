@@ -9,22 +9,27 @@ module.exports = function (options) {
         },
         type: {
             type: options.Sequelize.STRING,
+            // TODO: Validate that it's not an empty string...
             allowNull: false
         },
         name: {
             type: options.Sequelize.STRING,
+            // TODO: Validate that it's not an empty string...
             allowNull: false
         },
         callToAction: {
             type: options.Sequelize.STRING,
+            // TODO: Validate that it's not an empty string...
             allowNull: false
         },
         scheme: {
             type: options.Sequelize.STRING,
+            // TODO: Validate that it's not an empty string...
             allowNull: false
         },
         hint: {
             type: options.Sequelize.STRING,
+            // TODO: Validate that it's not an empty string...
             allowNull: false
         }
     });

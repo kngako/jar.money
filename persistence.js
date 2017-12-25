@@ -63,14 +63,17 @@ module.exports = function (config) {
     db.Role.UserRoles = db.Role.hasMany(db.UserRole);
     db.UserRole.belongsTo(db.Role);
 
-    db.Jar.Image = db.Jar.hasOne(db.Image);
+    db.User.Jars = db.User.hasMany(db.Jar);
+    
+    db.Jar.JarSlots = db.Jar.hasMany(db.JarSlot);
+    // db.JarSlot.Jar = db.JarSlot.belongsTo(db.Jar);
 
-    db.JarSlot.Jar = db.JarSlot.hasOne(db.Jar);
-    db.JarSlot.Slot = db.JarSlot.hasOne(db.Slot); // TODO: make allow null to false...
+    db.JarSlot.Slot = db.JarSlot.belongsTo(db.Slot); // TODO: make allow null to false...
 
-    db.Slot.Image = db.Slot.hasOne(db.Image);
+    db.Image.Jars = db.Image.hasMany(db.Jar);
+    db.Image.Slots = db.Image.hasMany(db.Slot);
 
-    db.Click.JarSlot = db.Click.hasOne(db.JarSlot);
+    db.JarSlot.Clicks = db.JarSlot.hasMany(db.Click);
 
     db.LoadDB = (callback) => {
         dbOptions.sequelize.sync()

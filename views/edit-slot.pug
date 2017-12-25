@@ -5,11 +5,11 @@ block content
         h1.flow-text Add new Slot to System.
         .row
             -
-                var actionURL = slot.id == null ? "/admin/slot" : "/admin/slot/" + slot.is + "/edit";
+                var actionURL = slot.id == null ? "/admin/slot" : "/admin/slot/" + slot.id + "/edit";
             form.col.s12(action=actionURL method="POST")
                 .row
                     .input-field.col.s12.m6
-                        <input placeholder="Name" name="type" id="name" type="text" class="validate" value=#{slot.name}>
+                        <input placeholder="Name" name="name" id="name" type="text" class="validate" value=#{slot.name}>
                         <label for="name">Slot Name</label>
                     .input-field.col.s12.m6
                         <input placeholder="Type" name="type" id="type" type="text" class="validate" value=#{slot.type}>
@@ -17,10 +17,12 @@ block content
                     .input-field.col.s12
                         <input placeholder="Call To Action" name="callToAction" id="call-to-action" type="text" class="validate" value="#{slot.callToAction}">
                         <label for="call-to-action">Slot Call To Action</label>
-                    
                     .input-field.col.s12
-                        <input placeholder="URL Scheme" id="scheme" type="text" class="validate" value=#{slot.scheme}>
+                        <input placeholder="URL Scheme" name="scheme" id="scheme" type="text" class="validate" value=#{slot.scheme}>
                         <label for="scheme">Slot URL scheme</label>
+                    .input-field.col.s12
+                        <input placeholder="Slot Value Hint" name="hint" id="hint" type="text" class="validate" value="#{slot.hint}">
+                        <label for="hint">Slot Value Hint</label>
                     if slot.image == null
                         .file-field.input-field.col.s12
                             <div class="btn">
@@ -43,8 +45,9 @@ block content
         
         if slot.image
             .row
-                .col.s12.slot-space
-                    img.slot-img(src=slot.image.src, alt=slot.name)
+                .col.s12.slot-space.center
+                    //- TODO: Return src=slot.image.src,
+                    img.slot-img(src="/img/sun.svg", alt=slot.name)
                 .col.s12.center
                     br
                     a.btn(href="/admin/image/"+slot.image.id+"/edit") Change Image

@@ -379,18 +379,26 @@ module.exports = function (options) {
 
     router.route('/admin/slot/:slotId')
         .get(function(request, response, next) {
-            if(request.user.isAdmin()){
-                response.render("view-slot", {
-                    pageTitle: "Money Jar - Slot",
-                    slot: slots[0]
-                });
+            if(request.user && request.user.isAdmin()){
+                db.Slot.findById(request.params.slotId)
+                .then(slot => {
+                    response.render("view-slot", {
+                        pageTitle: "Money Jar - Slot",
+                        slot: slot
+                    });
+                }).catch(error => {
+                    response.render("error", {
+                        pageTitle: "Money Jar - Error"
+                    });
+                })
+                
             } else  {
                 response.redirect('/admin');
             }
         })
         .post(function(request, response, next) {
             // TODO: Check if user is admin
-            if(request.user.isAdmin()){
+            if(request.user && request.user.isAdmin()){
                 // TODO: Edit a slot
                 // TODO: Render edited slot...
                 response.redirect("/admin/slot/" + request.param.slotId );
@@ -403,21 +411,49 @@ module.exports = function (options) {
     router.route('/admin/slot/:slotId/edit')
         .get(function(request, response, next) {
             // TODO: Check if user is admin...
-            if(request.user.isAdmin()){
-                response.render("edit-slot", {
-                    pageTitle: "Money Jar - Slot",
-                    slot: slots[0]
-                });
+            if(request.user && request.user.isAdmin()){
+                db.Slot.findById(request.params.slotId)
+                .then(slot => {
+                    response.render("edit-slot", {
+                        pageTitle: "Money Jar - Slot",
+                        slot: slot
+                    });
+                }).catch(error => {
+                    response.render("error", {
+                        pageTitle: "Money Jar - Error"
+                    });
+                })
+                
             } else  {
                 response.redirect('/admin');
             }
             
         })
         .post(function(request, response, next) {
-            if(request.user.isAdmin()){
+            if(request.user && request.user.isAdmin()){
                 // TODO: Edit a slot
-                // TODO: Render created slot
-                response.redirect("/admin/slot/" + request.param.slotId );
+                var slotId = request.params.slotId;
+                db.Slot.update({
+                    name: request.body.name,
+                    callToAction: request.body.callToAction,
+                    scheme: request.body.scheme,
+                    type: request.body.type,
+                    hint: request.body.hint
+                }, {
+                    where: {
+                        id: slotId
+                    }
+                }).then((count, slots) => {
+                    console.log("Count: ", count);
+                    console.log("Afflickted: ", slots);
+                    // This redirect will work even in error some input... 
+                    // TODO: Check that this will work with hacky input... 
+                    response.redirect("/admin/slot/" + slotId);
+                }).catch(error => {
+                    response.render("error", {
+                        pageTitle: "Money Jar - Error"
+                    });
+                })
             } else  {
                 response.redirect('/admin');
             }
@@ -427,7 +463,7 @@ module.exports = function (options) {
     
     router.route('/admin/slot/')
         .get(function(request, response, next) {
-            if(request.user.isAdmin()){
+            if(request.user && request.user.isAdmin()){
                 // TODO: Render Slot with ID...
                 response.render("edit-slot", {
                     pageTitle: "Money Jar - Slot",
@@ -439,9 +475,32 @@ module.exports = function (options) {
             
         })
         .post(function(request, response, next) {
-            if(request.user.isAdmin()){
+            if(request.user && request.user.isAdmin()){
                 // TODO: Create a slot
-                response.redirect("/admin");
+                db.Slot.create(
+                    {
+                        name: request.body.name,
+                        callToAction: request.body.callToAction,
+                        scheme: request.body.scheme,
+                        type: request.body.type,
+                        hint: request.body.hint
+                    }
+                ).then(slot => {
+                    if(slot) {
+                        console.log("Slot: ", slot);
+                        response.redirect("/admin/slot/"+ slot.id);
+                    } else {
+                        console.log("Error: Failed to create slot");
+                        response.render("error", {
+                            pageTitle: "Money Jar - Error"
+                        });
+                    }
+                }).catch(error => {
+                    console.error("Slot Creation Error: ", error);
+                    response.render("error", {
+                        pageTitle: "Money Jar - Error"
+                    });
+                })
             } else  {
                 response.redirect('/admin');
             }
@@ -654,10 +713,11 @@ module.exports = function (options) {
             if(request.user && request.user.ownsJar(request.param.shortCode))
             {
                 // TODO: Edit the jar    
-            } else {
                 response.redirect("/admin");
+            } else {
+                response.redirect("/admin/unauthorized");
             }
-            response.redirect("/admin");
+            
         });
 
     router.route('/admin/image/:imageId/edit')
@@ -681,7 +741,9 @@ module.exports = function (options) {
             {
                 // EDIT Jar...
             } else {
-                response.redirect("/500");
+                response.render("unauthorized", {
+                    pageTitle: "Money Jar - Unauthorized"
+                });
             }
             
         });
@@ -691,7 +753,7 @@ module.exports = function (options) {
             // TODO: Render Jar with ID...
             if(request.user){
                 response.render("open-jar", {
-                    pageTitle: "Kak Money Jar - Jar",
+                    pageTitle: "Money Jar - Jar",
                     jar: {}
                 });
             } else  {
@@ -707,12 +769,56 @@ module.exports = function (options) {
 
     router.route('/admin')
         .get(function(request, response, next) { 
-            if(request.user){
-                response.render("admin", {
-                    pageTitle: "Money Jar - Admin",
-                    slots: slots,
-                    jars: jars
-                });
+            if(request.user && request.user.isAdmin()) {
+                // TODO: Renders Jars and slots...
+                db.Slot.findAll()
+                .then(slots => {
+                    db.Jar.findAll(
+                        {
+                            where: {
+                                userId: request.user.id
+                            }
+                        }
+                    ).then(ujars => {
+                        response.render("admin", {
+                            pageTitle: "Money Jar - Admin",
+                            slots: slots,
+                            jars: ujars
+                        });
+                    }).catch(error=> {
+                        console.error("Jar Error: ", error)
+                        response.render("error", {
+                            pageTitle: "Money Jar - Error",
+                        });
+                    })
+                })
+                .catch(error=> {
+                    console.error("Jar Error: ", error)
+                    response.render("error", {
+                        pageTitle: "Money Jar - Error",
+                    });
+                })
+            } else if(request.user){
+                
+                db.Jar.findAll(
+                    {
+                        where: {
+                            userId: request.user.id
+                        }
+                    }
+                ).then(ujars => {
+                    response.render("admin", {
+                        pageTitle: "Money Jar - Admin",
+                        slots: null,
+                        jars: ujars
+                    });
+                }).catch(error=> {
+                    console.error("Jar Error: ", error)
+                    response.render("error", {
+                        pageTitle: "Money Jar - Error",
+                    });
+                })
+                
             } else  {
                 response.redirect('/admin/login');
             }           
@@ -735,6 +841,12 @@ module.exports = function (options) {
                 request.logout();   
             } 
             response.redirect('/');
+        });
+
+    router.get('/admin/unauthorized', function(request, response){
+            response.render("unauthorized", {
+                pageTitle: "Money Jar - Unauthorized"
+            });
         });
 
     // Last thing that should be done is serve static files... public first

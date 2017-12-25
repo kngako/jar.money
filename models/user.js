@@ -58,7 +58,7 @@ module.exports = function (options) {
         
         for(var i in this.user_roles) {
             var userRole = this.user_roles[i];
-            console.log("User Role: ", this.user_roles);
+            // console.log("User Role: ", this.user_roles);
             if(userRole.role.type == "admin" || userRole.role.type == "superadmin" ) {
                 return true;
             }

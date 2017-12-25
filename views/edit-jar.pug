@@ -11,12 +11,12 @@ block content
                 var actionURL = jar.shortCode == null ? "/admin/open/jar" : "/admin/jar/" + jar.shortCode + "/edit";
             form.col.s12(action=actionURL method="POST")
                 .row
-                    .input-field.col.s12
+                    .input-field.col.s12.m6
                         <input placeholder="Short code" id="short_code" type="text" class="validate" value=#{jar.shortCode}>
                         <label for="short_code">Short Code which will be on links</label>
-                    .input-field.col.s12
+                    .input-field.col.s12.m6
                         <input placeholder="Display Name" id="display_name" type="text" class="validate" value=#{jar.displayName}>
-                        <label for="display_name">Display name will be heading of jar</label>
+                        <label for="display_name">Display name which will be heading of jar</label>
                     .input-field.col.s12
                         <input placeholder="Description" id="description" type="text" class="validate" value=#{jar.description}>
                         <label for="description">Short description for why people should fill your money jar</label>
@@ -28,7 +28,7 @@ block content
                                 <input type="file">
                             </div>
                             <div class="file-path-wrapper">
-                                <input class="file-path validate"  placeholder="Image to be used as the face of your money jar" type="text">
+                                <input id="display_picture" class="file-path validate"  placeholder="Image to be used as the face of your money jar" type="text">
                             </div>
 
                     //- TODO: Have a submit/next button
