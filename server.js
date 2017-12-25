@@ -28,6 +28,8 @@ module.exports = function (config, db) {
     
     passport.use(new LocalStrategy(
         function(username, password, done) {
+            username = username != null ? username : "";
+            password = password != null ? password : "";
             return db.User.findOne({
                 where: {
                     email: username
@@ -37,16 +39,25 @@ module.exports = function (config, db) {
                     // Validate Password
                     if(user) {
                         if (!user.validPassword(password)) {
-                            return done(null, false, { message: 'Incorrect password.' });
+                            return done(null, false, { 
+                                username: username,
+                                message: 'Invalid username or password.' 
+                            });
                         }
                         else if (user.activatedOn) {
-                            return done(null, false, { message: 'Admin hasn\'t approved your request for membership yet. Please be patient.' });
+                            return done(null, false, { 
+                                username: username,
+                                message: 'Admin hasn\'t approved your request for membership yet. Please be patient.' 
+                            });
                         } else {
-                            console.log("Login Success");
                             return done(null, user);
                         }
                     } else {
-                        return done(null, false, { message: 'Who are you and what are you doing here?.' });
+                        console.log("Login Unauthorized");
+                        return done(null, false, { 
+                            username: username,
+                            message: 'Who are you and what are you doing here?.' 
+                        });
                     }
                     
                 },
@@ -56,9 +67,9 @@ module.exports = function (config, db) {
                     return done(null, false, { message: 'Incorrect username.' });
                 }
             ).catch(error => {
+                console.log("Passport Error: ", error);
                 return done(error);
             })
-            
         }
     ));
     
@@ -69,12 +80,12 @@ module.exports = function (config, db) {
     passport.deserializeUser(function(id, done) {
         // TODO: Add memberships and things like that...
         return db.User.findById(id, {
-            attributes: ['id', 'level', 'firstName', 'lastName', 'emailConfirmedOn'],
+            attributes: ['id', 'firstName', 'lastName', 'emailConfirmedOn'],
             include: {
                 association: db.User.UserRoles,
                 include: {
                     model: db.Role,
-                    attributes: ['type', "membershipId"],
+                    attributes: ['type'],
                 }
             }
         }) // TODO: Limit attributes...

@@ -29,10 +29,6 @@ module.exports = function (options) {
         birthday: {
             type: options.Sequelize.DATE
         },
-        level: {
-            type: options.Sequelize.STRING,
-            allowNull: false,
-        },
         emailConfirmedOn: {
             type: options.Sequelize.DATE
         },
@@ -58,14 +54,34 @@ module.exports = function (options) {
     };
 
     model.prototype.isAdmin = function() {
-        // TODO: Find a more secure role id system...
+        // TODO: Might need to query the rules here if we get many users...
+        
         for(var i in this.user_roles) {
             var userRole = this.user_roles[i];
-            if(userRole.roleId == "admin" || userRole.roleId == "superadmin" ) {
+            console.log("User Role: ", this.user_roles);
+            if(userRole.role.type == "admin" || userRole.role.type == "superadmin" ) {
                 return true;
             }
         }
         return false;
+    }
+
+    model.prototype.ownsJar = function(jarId, db) {
+        // TODO: check if jar is owned by user...
+        
+        return true;
+    }
+
+    model.prototype.ownsJarSlot = function(jarId, db) {
+        // TODO: Check if jar slot is owned by user...
+        
+        return true;
+    }
+
+    model.prototype.ownsImage = function(imageId, db) {
+        // TODO: Check if Image is owned by user...
+        
+        return true;
     }
 
     // Model.prototype.toJSON = function () {
@@ -74,31 +90,6 @@ module.exports = function (options) {
     //     // TODO: have an associative array for all memberships that user belongs too...
     //     return values;
     // }
-
-    model.prototype.isAdminOfMembership = function(membershipId) {
-        // TODO: Find a more secure role id system...
-        for(var i in this.user_roles) {
-            var userRole = this.user_roles[i];
-            console.log("Checking: ", userRole.role.membershipId);
-            if(userRole.role.membershipId == membershipId && (userRole.role.type == "admin" || userRole.role.type == "superadmin")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    model.prototype.isMemberOfMembership = function(membershipId) {
-        // TODO: Find a more secure role id system...
-        for(var i in this.user_roles) {
-            var userRole = this.user_roles[i];
-            console.log("Checking: ", userRole.role.membershipId);
-            console.log("Should be: ", membershipId);
-            if(userRole.role.membershipId == membershipId && (userRole.role.type == "member" || userRole.role.type == "superadmin")) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     return model;
 };

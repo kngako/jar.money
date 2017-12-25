@@ -1,0 +1,10 @@
+extends templates/layout.pug
+
+block content
+    <div id="content-root">
+        <div class="container">
+            <p class="flow-text">Please check your inbox and confirm the email address you provided us.</p>
+            <p class="flow-text">Didn't get an email?</p>
+            <a class="btn" v-on:click="confirmEmail">Resend confirmation</a>
+        </div>
+    </div>
