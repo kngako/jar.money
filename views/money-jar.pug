@@ -2,41 +2,44 @@ extend templates/layout.pug
 
 block content
     .container
-        
-        //- Header section on large screen
-        
-        .row.valign-wrapper
-            .col.l2.hide-on-small-only
-                br
-                img.responsive-img(src="/img/k.svg")
-            .col.l10
-                //- TODO: Replace h1 with feed heading...
-                h1.jar-header= jar.displayName
-                //- Replace with actual
-                p.flow-text= jar.description
-
-        //- Same header section for small screen
-        //- .hide-on-med-and-up
-            .row
-                .col.s12
-                    h2= jar.displayName
+        if jar
+            //- Header section on large screen
+            
+            .row.valign-wrapper
+                .col.l2.hide-on-small-only
+                    br
+                    img.responsive-img(src="/admin/image/"+jar.image.id alt=jar.displayName)
+                .col.l10
+                    //- TODO: Replace h1 with feed heading...
+                    h1.jar-header= jar.displayName
+                    //- Replace with actual
                     p.flow-text= jar.description
-                //- .col.s12
-                //-     img.responsive-img(src=jar.img.src) 
-                    //- TODO: May set image is background...
 
-        .container
-            .row
-                each jarSlot in jar.jar_slots
-                    if jarSlot.uri
-                        .col.s12.l6
-                            a(href=jarSlot.slot.scheme+jarSlot.uri)
-                                .row
-                                    .col.s4.slot-space
-                                        img.slot-img(src="/img/sun.svg" alt=jarSlot.slot.name) 
-                                    .col.s8.center.slot-space.green
-                                        .call-to-action
-                                            p.black-text.green.flow-text= jarSlot.slot.callToAction
+            //- Same header section for small screen
+            //- .hide-on-med-and-up
+                .row
+                    .col.s12
+                        h2= jar.displayName
+                        p.flow-text= jar.description
+                    //- .col.s12
+                    //-     img.responsive-img(src=jar.img.src) 
+                        //- TODO: May set image is background...
+
+            .container
+                .row
+                    each jarSlot in jar.jar_slots
+                        if jarSlot.uri
+                            .col.s12.l6
+                                a(href=jarSlot.slot.scheme+jarSlot.uri)
+                                    .row
+                                        .col.s4.slot-space
+                                            img.slot-img(src="/admin/image/"+jarSlot.slot.image.id alt=jarSlot.slot.name) 
+                                        .col.s8.center.slot-space.green
+                                            .call-to-action
+                                                p.black-text.green.flow-text= jarSlot.slot.callToAction
+
+        else 
+            p.red-text.flow-text Jar of that name doesn't exist.
 
 block footer
     footer.page-footer.green(role="navigation")

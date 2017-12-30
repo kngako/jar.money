@@ -6,7 +6,7 @@ block content
         .row
             -
                 var actionURL = slot.id == null ? "/admin/slot" : "/admin/slot/" + slot.id + "/edit";
-            form.col.s12(action=actionURL method="POST")
+            form.col.s12(action=actionURL method="POST" enctype="multipart/form-data")
                 .row
                     .input-field.col.s12.m6
                         <input placeholder="Name" name="name" id="name" type="text" class="validate" value=#{slot.name}>
@@ -27,7 +27,7 @@ block content
                         .file-field.input-field.col.s12
                             <div class="btn">
                                 <span>Image</span>
-                                <input type="file">
+                                <input name="image" type="file">
                             </div>
                             <div class="file-path-wrapper">
                                 <input class="file-path validate"  placeholder="Image to be used as the face of your money jar" type="text">

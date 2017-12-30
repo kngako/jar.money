@@ -2,170 +2,24 @@
  * This router handles things related to the web browser experience...
  */
 // This is the mock data we working with...
-var jars = [
-    {
-        "shortCode" : "whatdoesittake",
-        "displayName": "What Does It Take ",
-        "description": "Contribute towards the creation of more shit.",
-        "image": {
-            "id": 2455357,
-            "src": "/img/k.svg"
-        },
-        "jarSlots": [
-            {
-                // Allow for stats
-                "uri": "kngako",
-                "slot": {
-                    "type": "patreon",
-                    "name": "Patreon",
-                    "callToAction": "become a patreon",
-                    "scheme": "http://patreon.com/",
-                    "hint": "YourPatreonCreatorUsername",
-                    "image": {
-                        "src": "/img/patreon_logo.svg"
-                    }
-                },
-            },
-            {
-                // Allow for stats
-                "uri": "kngako",
-                "slot": {
-                    "type": "paypal",
-                    "name": "Paypal",
-                    "callToAction": "tip me",
-                    "scheme": "http://paypal.me/",
-                    "hint": "YourPaypalMeUsername",
-                    "image": {
-                        "src": "/img/patreon_logo.svg"
-                    }
-                },
-            },
-            {
-                // Allow for stats
-                "uri": "kngako",
-                "slot": {
-                    "type": "cash",
-                    "name": "cash",
-                    "callToAction": "tip me",
-                    "scheme": "http://cash.me/",
-                    "hint": "YourPaypalMeUsername",
-                    "image": {
-                        "src": "/img/patreon_logo.svg"
-                    }
-                },
-            }
-        ],
-    },
-    {
-        "shortCode" : "kngako",
-        "displayName": "Kgothatso Ngako",
-        "description": "Approach the author with your offering.",
-        "image": {
-            "id": 2455357,
-            "src": "/img/k.svg"
-        },
-        "jarSlots": [
-            {
-                // Allow for stats
-                "uri": "kngako",
-                "slot": {
-                    "type": "patreon",
-                    "name": "Patreon",
-                    "callToAction": "become a patreon",
-                    "scheme": "http://patreon.com/",
-                    "hint": "YourPatreonCreatorUsername",
-                    "image": {
-                        "src": "/img/patreon_logo.svg"
-                    }
-                },
-            },
-            {
-                // Allow for stats
-                "uri": "kngako",
-                "slot": {
-                    "type": "paypal",
-                    "name": "Paypal",
-                    "callToAction": "tip me",
-                    "scheme": "http://paypal.me/",
-                    "hint": "YourPaypalMeUsername",
-                    "image": {
-                        "src": "/img/patreon_logo.svg"
-                    }
-                },
-            }
-        ],
-        
-    }
-];
-
-var slots = [
-    {
-        "id":"462422356",
-        "type": "patreon",
-        "name": "Patreon",
-        "callToAction": "become a patreon",
-        "scheme": "http://patreon.com/",
-        "hint": "Patreon username",
-        "image": {
-            "id":474634,
-            "src": "/img/patreon_logo.svg"
-        }
-    },
-    {
-        "id":"46242767",
-        "type": "paypal.me",
-        "name": "Paypal.me",
-        "callToAction": "tip me",
-        "scheme": "http://paypal.me/",
-        "hint": "paypal.me username",
-        "image": {
-            "id":4624276,
-            "src": "/img/paypal.svg"
-        }
-    },
-    {
-        "id":"4624224",
-        "type": "bitcoin",
-        "name": "Bitcoin",
-        "callToAction": "tip me",
-        "scheme": "bitcoin:",
-        "hint": "Bitcoin address",
-        "address": "1EeBSsYNZn7C5BHpTbhfm93tnGPyAoTDCY",
-        "image": {
-            "id":236745,
-            "src": "/img/bitcoin.svg"
-        }
-    },
-    {
-        "id":"462425424",
-        "type": "litecoin",
-        "name": "Litecoin",
-        "callToAction": "tip me",
-        "scheme": "litecoin:",
-        "hint": "Litecoin address",
-        "address": "LQKSHezcC1MgZJC6j6v8FKtLZKujEQn3RX",
-        "image": {
-            "id":4624,
-            "src": "/img/litecoin.svg"
-        }
-    },
-    {
-        "id":"46223542",
-        "type": "ethereum",
-        "name": "Ethereum",
-        "callToAction": "tip me",
-        "scheme": "ethereum:",
-        "hint": "Ethereum Address",
-        "address": "0x6E9341cE50Cd1fCdf649E71f19976059943C0D62",
-        "image": {
-            "id":3627,
-            "src": "/img/ethereum.svg"
-        }
-    }
-]
 
 module.exports = function (options) {
     var path = require('path');
+    var multer  = require('multer');
+    var mime = require('mime');
+    
+    var storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, 'files/')
+        },
+        filename: function (req, file, cb) {
+            // TODO: Error handling...
+            cb(null, file.fieldname + '-' + Date.now() + "." + mime.getExtension(file.mimetype))
+        }
+    });
+    var file = multer({ 
+        storage: storage
+    });
 
     var express = options.express;
     var db = options.db;
@@ -380,8 +234,17 @@ module.exports = function (options) {
 
     router.route('/admin/slot/:slotId')
         .get(function(request, response, next) {
-            if(request.user && request.user.isAdmin()){
-                db.Slot.findById(request.params.slotId)
+            if(request.user && request.user.isAdmin() || true){
+                db.Slot.findById(
+                    request.params.slotId,
+                    {
+                        include: [
+                            {
+                                association: db.Slot.Image
+                            }
+                        ]
+                    }
+                )
                 .then(slot => {
                     response.render("view-slot", {
                         pageTitle: "Money Jar - Slot",
@@ -431,6 +294,7 @@ module.exports = function (options) {
             
         })
         .post(function(request, response, next) {
+            console.log("************Image: ", request.file);
             if(request.user && request.user.isAdmin()){
                 // TODO: Edit a slot
                 var slotId = request.params.slotId;
@@ -475,27 +339,43 @@ module.exports = function (options) {
             }
             
         })
-        .post(function(request, response, next) {
+        .post(file.single('image'), function(request, response, next) {
+            console.log("************Image: ", request.file);
+            var tmpFile = request.file;
             if(request.user && request.user.isAdmin()){
-                // TODO: Create a slot
-                db.Slot.create(
+                // TODO: Copy tmpFile to files directory...
+                db.Image.create(
                     {
-                        name: request.body.name,
-                        callToAction: request.body.callToAction,
-                        scheme: request.body.scheme,
-                        type: request.body.type,
-                        hint: request.body.hint
+                        src: request.file.path
                     }
-                ).then(slot => {
-                    if(slot) {
-                        console.log("Slot: ", slot);
-                        response.redirect("/admin/slot/"+ slot.id);
-                    } else {
-                        console.log("Error: Failed to create slot");
+                ).then(image => {
+                    // TODO: Remove tmpFile from system...
+                    db.Slot.create(
+                        {
+                            imageId: image.id,
+                            name: request.body.name,
+                            callToAction: request.body.callToAction,
+                            scheme: request.body.scheme,
+                            type: request.body.type,
+                            hint: request.body.hint
+                        }
+                    ).then(slot => {
+                        if(slot) {
+                            console.log("Slot: ", slot);
+                            response.redirect("/admin/slot/"+ slot.id);
+                        } else {
+                            console.log("Error: Failed to create slot");
+                            response.render("error", {
+                                pageTitle: "Money Jar - Error"
+                            });
+                        }
+                    }).catch(error => {
+                        // TODO: Creatation 
+                        console.error("Slot Creation Error: ", error);
                         response.render("error", {
                             pageTitle: "Money Jar - Error"
                         });
-                    }
+                    })
                 }).catch(error => {
                     // TODO: Creatation 
                     console.error("Slot Creation Error: ", error);
@@ -503,6 +383,7 @@ module.exports = function (options) {
                         pageTitle: "Money Jar - Error"
                     });
                 })
+                
             } else  {
                 response.redirect('/admin');
             }
@@ -570,35 +451,10 @@ module.exports = function (options) {
             } else  {
                 response.redirect('/admin');
             }
-            
         })
-        .post(function(request, response, next) {
-            // TODO: Check if user is authenticated
-            if(request.user){
-                // TODO: Create a jar
-                // TODO: 
-                var shortCode = "kngako";
-                response.redirect("/admin/jar/" + shortCode + "/jar-slot");
-            } else  {
-                response.redirect('/admin');
-            }
-            
-        });
-
-    router.route('/admin/open/jar')
-        .get(function(request, response, next) {
-            if(request.user){
-                response.render("edit-jar", {
-                    pageTitle: "Deprecated Money Jar - Jar",
-                    jar: {}
-                });
-            } else  {
-                response.redirect('/admin');
-            }
-            
-        })
-        .post(function(request, response, next) {
+        .post(file.single('image'), function(request, response, next) {
             // TODO: Create a Jar
+            console.log("************Image: ", request.file);
             if(request.user){
                 // TODO: Redirect to Add a jar...
                 db.Jar.create(
@@ -924,9 +780,11 @@ module.exports = function (options) {
                 response.redirect("/admin");
             }
         })
-        .post(function(request, response, next) {
+        .post(file.single('image'), function(request, response, next) {
             // TODO: Edit this jar
             // TODO: Render edited jar...
+            console.log("************Image: ", request.file);
+
             if(request.user && request.user.ownsJar(request.params.shortCode)){
                 // TODO: get the jar...
                 var shortCode = request.params.shortCode;
@@ -967,19 +825,41 @@ module.exports = function (options) {
             // TODO: Add image...
             if(request.user && request.user.ownsImage(request.params.imageId))
             {
-                response.render("edit-image", {
-                    pageTitle: "Money Jar - Image",
-                    image: slots[0].image
-                });
+                db.Image.findById(request.params.imageId)
+                .then(image => {
+                    response.render("edit-image", {
+                        pageTitle: "Money Jar - Image",
+                        image: slots[0].image
+                    });
+                }).catch(error => {
+                    console.error("Error: ", error);
+                    response.render("error", {
+                        pageTitle: "Money Jar - Image Change Error"
+                    });
+                })
+                
             } else {
                 response.redirect("/admin");
             }
         })
-        .post(function(request, response, next) {
+        .post(file.single('image'), function(request, response, next) {
             // TODO: Check if user is admin or owner of image...
             // TODO: Create a slot
             if(request.user && request.user.ownsImage(request.params.imageId))
             {
+                var imageId = request.params.imageId;
+                db.Image.update(
+                    {
+                        src: request.file.path
+                    },
+                    {
+                        where: {
+                            id: imageId
+                        }
+                    }
+                ).then(image => {
+                    response.redirect("/admin/image/" + imageId );
+                })
                 // EDIT Jar...
             } else {
                 response.render("unauthorized", {
@@ -987,6 +867,26 @@ module.exports = function (options) {
                 });
             }
             
+        });
+    
+    router.route('/admin/image/:imageId')
+        .get(function(request, response, next) {
+            console.log("Trying to find: ", request.params.imageId)
+            db.Image.findById(request.params.imageId)
+            .then(image => {
+                console.log("Found Image: ", image);
+                if(image) {
+                    // show image...
+                    var filePath = path.resolve(image.src);
+                    console.log("Sending: ", filePath);
+                    console.log("Mime Type: ", mime.getType(filePath));
+                    response.setHeader('Content-Type', mime.getType(filePath));
+                    // response.type(mime.getType(filePath));
+                    response.sendFile(filePath);
+                } else {    
+                    next();
+                }
+            })
         });
 
     router.route('/admin/open-jar/')
@@ -1026,7 +926,6 @@ module.exports = function (options) {
                             ]
                         }
                     ).then(ujars => {
-                        console.log("Jars: ", ujars);   
                         response.render("admin", {
                             pageTitle: "Money Jar - Admin",
                             slots: slots,
@@ -1098,10 +997,18 @@ module.exports = function (options) {
                     },
                     include: [
                         {
+                            association: db.Jar.Image,
+                        },
+                        {
                             association: db.Jar.JarSlots,
                             include: [
                                 {
-                                    association: db.JarSlot.Slot
+                                    association: db.JarSlot.Slot,
+                                    include: [
+                                        {
+                                            association: db.Slot.Image
+                                        }
+                                    ]
                                 }
                             ]
                         }

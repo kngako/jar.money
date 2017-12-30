@@ -8,7 +8,7 @@ block content
             h1.flow-text Create a new Money Jar
         .row
             -
-                var actionURL = jar.shortCode == null ? "/admin/open/jar" : "/admin/jar/" + jar.shortCode + "/edit";
+                var actionURL = jar.shortCode == null ? "/admin/jar" : "/admin/jar/" + jar.shortCode + "/edit";
                 var isBlank = jar.shortCode == null;
             form.col.s12(action=actionURL method="POST")
                 .row
@@ -27,7 +27,7 @@ block content
                         .file-field.input-field.col.s12
                             <div class="btn">
                                 <span>Image</span>
-                                <input type="file">
+                                <input type="file" name="image">
                             </div>
                             <div class="file-path-wrapper">
                                 <input id="display_picture" class="file-path validate"  placeholder="Image to be used as the face of your money jar" type="text">

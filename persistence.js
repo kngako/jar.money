@@ -72,7 +72,10 @@ module.exports = function (config) {
     db.JarSlot.Slot = db.JarSlot.belongsTo(db.Slot); // TODO: make allow null to false...
 
     db.Image.Jars = db.Image.hasMany(db.Jar);
+    db.Jar.Image = db.Jar.belongsTo(db.Image);
+    
     db.Image.Slots = db.Image.hasMany(db.Slot);
+    db.Slot.Image = db.Slot.belongsTo(db.Image);
 
     db.JarSlot.Clicks = db.JarSlot.hasMany(db.Click);
 
