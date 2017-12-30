@@ -9,16 +9,18 @@ block content
         .row
             -
                 var actionURL = jar.shortCode == null ? "/admin/open/jar" : "/admin/jar/" + jar.shortCode + "/edit";
+                var isBlank = jar.shortCode == null;
             form.col.s12(action=actionURL method="POST")
                 .row
                     .input-field.col.s12.m6
-                        <input placeholder="Short code" id="short_code" type="text" class="validate" value=#{jar.shortCode}>
+                        input#short_code.validate(placeholder="Short Code" name="shortCode" type="text" value=jar.shortCode disabled=!isBlank)
+                        //- <input placeholder="Short code" id="short_code" type="text" class="validate" value=#{jar.shortCode}>
                         <label for="short_code">Short Code which will be on links</label>
                     .input-field.col.s12.m6
-                        <input placeholder="Display Name" id="display_name" type="text" class="validate" value=#{jar.displayName}>
+                        <input placeholder="Display Name" name="displayName" id="display_name" type="text" class="validate" value="#{jar.displayName}">
                         <label for="display_name">Display name which will be heading of jar</label>
                     .input-field.col.s12
-                        <input placeholder="Description" id="description" type="text" class="validate" value=#{jar.description}>
+                        <input placeholder="Description" name="description" id="description" type="text" class="validate" value="#{jar.description}">
                         <label for="description">Short description for why people should fill your money jar</label>
                     //- TODO: Display Image if it is available...
                     if jar.image == null

@@ -30,7 +30,7 @@ block content
             .col.s12
                 h2 Jar Slots 
                     a.btn(href="/admin/jar/" + jar.shortCode +"/jar-slot/") Add Jar Slot
-            if jar.jarSlots
+            if jar.jar_slots
                 .col.s12
                     table.bordered.responsive-table
                         thead
@@ -49,6 +49,10 @@ block content
                                     td= jarSlot.slot.callToAction
                                     td= jarSlot.slot.scheme +  jarSlot.uri
                                     //- TODO: Add the clicks...
+            else
+                .center
+                    p.flow-text You have no jar slots. Feel free to 
+                        a(href="/admin/jar/" + jar.shortCode +"/jar-slot/") add one
 
         br
 

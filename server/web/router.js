@@ -461,7 +461,7 @@ module.exports = function (options) {
         });
 
     
-    router.route('/admin/slot/')
+    router.route('/admin/slot')
         .get(function(request, response, next) {
             if(request.user && request.user.isAdmin()){
                 // TODO: Render Slot with ID...
@@ -496,6 +496,7 @@ module.exports = function (options) {
                         });
                     }
                 }).catch(error => {
+                    // TODO: Creatation 
                     console.error("Slot Creation Error: ", error);
                     response.render("error", {
                         pageTitle: "Money Jar - Error"
@@ -513,12 +514,14 @@ module.exports = function (options) {
             // TODO: Render Jar with ID...
             if(request.user && request.user.ownsJar(request.param.shortCode)){
                 // TODO: get the jar...
-                db.Jar.findById(
-                    request.param.shortCode
+                db.Jar.findOne(
+                    {
+                        shortCode: request.param.shortCode
+                    }
                 ).then(jar => {
                     response.render("view-jar", {
                         pageTitle: "Money Jar - Jar",
-                        jar: jars[0]
+                        jar: jar
                     });
                 })
             } else  {
@@ -527,24 +530,7 @@ module.exports = function (options) {
 
             
         })
-        .post(function(request, response, next) {
-            // TODO: Edit this jar
-            // TODO: Render edited jar...
-            if(request.user && request.user.ownsJar(request.param.shortCode)){
-                // TODO: get the jar...
-                db.Jar.findById(
-                    request.param.shortCode
-                ).then(jar => {
-                    response.render("view-jar", {
-                        pageTitle: "Money Jar - Jar",
-                        jar: jars[0]
-                    });
-                })
-            } else  {
-                response.redirect('/admin');
-            }
-            
-        });
+        
     
     router.route('/admin/jar/')
         .get(function(request, response, next) {
@@ -587,9 +573,32 @@ module.exports = function (options) {
         .post(function(request, response, next) {
             // TODO: Create a Jar
             if(request.user){
-                // TODO: Redirect to Add a slot...
-                var shortCode = "kngako"
-                response.redirect("/admin/jar/" + shortCode +"/jar-slot");
+                // TODO: Redirect to Add a jar...
+                db.Jar.create(
+                    {
+                        shortCode: request.body.shortCode,
+                        displayName: request.body.displayName,
+                        description: request.body.description,
+                        userId: request.user.id
+                    }
+                ).then(jar => {
+                    if(jar) {
+                        // Success... set up jar slots...
+                        response.redirect("/admin/jar/" + jar.shortCode +"/jar-slot");
+                    } else {
+                        console.error("Error: Failed to create slot");
+                        response.render("error", {
+                            pageTitle: "Money Jar - Error"
+                        });
+                    }
+                }).catch(error => {
+                    console.error("Error: ", error);
+                    response.render("error", {
+                        pageTitle: "Money Jar - Error"
+                    });
+                })
+
+                
             } else  {
                 response.redirect('/admin');
             }
@@ -701,23 +710,64 @@ module.exports = function (options) {
             // TODO: Render Jar with ID...
             if(request.user && request.user.ownsJar(request.param.shortCode))
             {
-                response.render("edit-jar", {
-                    pageTitle: "Money Jar - Jar",
-                    jar: jars[0]
-                });
+                db.Jar.findOne(
+                    {
+                        where: {
+                            shortCode: request.params.shortCode
+                        }
+                    }
+                ).then(jar => {
+                    response.render("edit-jar", {
+                        pageTitle: "Money Jar - Jar",
+                        jar: jar
+                    });
+                }).catch(error => {
+                    console.error("Edit Jar Error: ", error);
+                    response.render("error", {
+                        pageTitle: "Money Jar - Error"
+                    });
+                })
+                
             } else {
                 response.redirect("/admin");
             }
         })
         .post(function(request, response, next) {
-            if(request.user && request.user.ownsJar(request.param.shortCode))
-            {
-                // TODO: Edit the jar    
-                response.redirect("/admin");
-            } else {
-                response.redirect("/admin/unauthorized");
+            // TODO: Edit this jar
+            // TODO: Render edited jar...
+            if(request.user && request.user.ownsJar(request.param.shortCode)){
+                // TODO: get the jar...
+                var shortCode = request.params.shortCode;
+                db.Jar.update(
+                    {
+                        displayName: request.body.displayName,
+                        description: request.body.description
+                    },
+                    {
+                        where: {
+                            shortCode: shortCode
+                        }
+                    }
+                    
+                ).then(success => {
+                    if(success) {
+                        // Success... set up jar slots...
+                        response.redirect("/admin/jar/" + shortCode +"/jar-slot");
+                    } else {
+                        console.error("Error: Failed to create slot");
+                        response.render("error", {
+                            pageTitle: "Money Jar - Error"
+                        });
+                    }
+                }).catch(error => {
+                    console.error("Error: ", error);
+                    response.render("error", {
+                        pageTitle: "Money Jar - Error"
+                    });
+                })
+            } else  {
+                response.redirect('/admin');
             }
-            
         });
 
     router.route('/admin/image/:imageId/edit')
@@ -769,7 +819,7 @@ module.exports = function (options) {
 
     router.route('/admin')
         .get(function(request, response, next) { 
-            if(request.user && request.user.isAdmin()) {
+            if(request.user && request.user.isAdmin() ) {
                 // TODO: Renders Jars and slots...
                 db.Slot.findAll()
                 .then(slots => {
@@ -777,9 +827,15 @@ module.exports = function (options) {
                         {
                             where: {
                                 userId: request.user.id
-                            }
+                            },
+                            include: [
+                                {
+                                    association: db.Jar.JarSlots
+                                }
+                            ]
                         }
                     ).then(ujars => {
+                        console.log("Jars: ", ujars);   
                         response.render("admin", {
                             pageTitle: "Money Jar - Admin",
                             slots: slots,
@@ -793,7 +849,7 @@ module.exports = function (options) {
                     })
                 })
                 .catch(error=> {
-                    console.error("Jar Error: ", error)
+                    console.error("Slot Errors: ", error)
                     response.render("error", {
                         pageTitle: "Money Jar - Error",
                     });
@@ -827,6 +883,7 @@ module.exports = function (options) {
 
     router.route('/:shortCode')
         .get(function(request, response, next) {
+            console.log("The Valuable Money Jar");
             // TODO: Show avaible jar. 
             // TODO: Show claim jar if short code isn't in the system.
             response.render("money-jar", {
