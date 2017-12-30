@@ -9,11 +9,10 @@ module.exports = function (options) {
         },
         uri: {
             type: options.Sequelize.STRING,
-            allowNull: false
         },
         order: {
             type: options.Sequelize.INTEGER,
-            allowNull: false
+            defaultValue: 0
         },
     });
 

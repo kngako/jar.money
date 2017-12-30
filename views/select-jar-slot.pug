@@ -15,11 +15,11 @@ block content
                                     div
                                         .row
                                             .col.s12.slot-space
-                                                input(type="radio" name="type" id="selection-"+slot.id)
+                                                input(type="radio" name="slot" id="selection-"+slot.id value=slot.id)
                                                 label.slot-space(for="selection-"+slot.id)
                                                     .row
                                                         .col.s4.slot-space
-                                                            img.slot-img(src=slot.image.src alt=slot.name) 
+                                                            img.slot-img(src="/img/sun.svg" alt=slot.name) 
                                                         .col.s8.center.slot-space.green
                                                             .call-to-action
                                                                 p.black-text.green.flow-text= slot.callToAction

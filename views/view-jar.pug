@@ -42,12 +42,16 @@ block content
                                     a.btn.hide-on-small-only(href="/jar-slot/") Add Jar Slot
                                     a.hide-on-med-and-up(href="/jar-slot/") Add Jar Slot
                         tbody
-                            each jarSlot in jar.jarSlots
+                            each jarSlot in jar.jar_slots
                                 tr
                                     td
                                         a(href="/admin/jar/" + jar.shortCode +"/jar-slot/" + jarSlot.id)= jarSlot.slot.name
                                     td= jarSlot.slot.callToAction
-                                    td= jarSlot.slot.scheme +  jarSlot.uri
+                                    if jarSlot.uri
+                                        td= jarSlot.slot.scheme +  jarSlot.uri
+                                    else
+                                        td 
+                                            a(href="/admin/jar/" + jar.shortCode +"/jar-slot/" + jarSlot.id) Specify link 
                                     //- TODO: Add the clicks...
             else
                 .center

@@ -2,31 +2,31 @@ extend templates/layout.pug
 
 block content
     .container
-        h3= heading
+        h3 Edit Jar Slot
         .row
             -
-                var actionURL = "/admin/jar/" + jar.shortCode + "/jar-slot/" + jarSlot.id + "?complete=false";
-                var actionPlusURL = "/admin/jar/" + jar.shortCode + "/jar-slot/" + jarSlot.id + "?complete=true";
+                var actionURL = "/admin/jar/" + jarSlot.jar.shortCode + "/jar-slot/" + jarSlot.id + "?complete=false";
+                var actionPlusURL = "/admin/jar/" + jarSlot.jar.shortCode + "/jar-slot/" + jarSlot.id + "?complete=true";
             form.col.s12(action=actionURL method="POST")
                 .row.center
                     .col.s12.l6
                         .row
                             .col.s4.slot-space
-                                img.slot-img(src=slot.image.src alt=slot.name) 
+                                img.slot-img(src="/img/sun.svg" alt=jarSlot.slot.name) 
                             .col.s8.center.slot-space.green
                                 .call-to-action
-                                    p.black-text.green.flow-text= slot.callToAction
+                                    p.black-text.green.flow-text= jarSlot.slot.callToAction
                     .input-field.col.s12.l6.center
-                        <input placeholder="#{slot.hint}" id="jar_uri" type="text" class="validate" value=#{jarSlot.uri}>
-                        <label for="jar_uri">#{slot.scheme}</label>
+                        <input placeholder="#{jarSlot.slot.hint}" id="uri" name="uri" type="text" class="validate" value=#{jarSlot.uri}>
+                        <label for="uri">#{jarSlot.slot.scheme}</label>
                     
                     //- TODO: Have a submit/next button
                 .row
-                    .col.s6.center
-                        <button class="btn waves-effect waves-light" type="submit" name="action" formaction="#{actionPlusURL}">Add More
-                            <i class="material-icons right">send</i>
-                        </button>
-                    .col.s6.center
+                    //- .col.s6.center
+                    //-     <button class="btn waves-effect waves-light" type="submit" name="action" formaction="#{actionPlusURL}">Add More
+                    //-         <i class="material-icons right">send</i>
+                    //-     </button>
+                    .col.s12.center
                         <button class="btn waves-effect waves-light" type="submit" name="action" formaction="#{actionURL}">Submit
                             <i class="material-icons right">send</i>
                         </button>
