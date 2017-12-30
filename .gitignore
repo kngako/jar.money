@@ -65,3 +65,4 @@ db/database.sqlite
 config/develop.json
 config/production.json
 config/development.json
+files/
