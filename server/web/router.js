@@ -873,7 +873,7 @@ module.exports = function (options) {
                 .then(image => {
                     response.render("edit-image", {
                         pageTitle: "Money Jar - Image",
-                        image: slots[0].image
+                        image: image
                     });
                 }).catch(error => {
                     console.error("Error: ", error);
@@ -887,8 +887,6 @@ module.exports = function (options) {
             }
         })
         .post(imageUploads.single('image'), function(request, response, next) {
-            // TODO: Check if user is admin or owner of image...
-            // TODO: Create a slot
             if(request.file) {
                 if(request.user && request.user.ownsImage(request.params.imageId))
                 {
@@ -903,7 +901,9 @@ module.exports = function (options) {
                             }
                         }
                     ).then(image => {
-                        response.redirect("/admin/image/" + imageId );
+                        // TODO: communicate successful upload to user...
+                        // TODO: Delete old image...
+                        response.redirect("/admin");
                     })
                     // EDIT Jar...
                 } else {

@@ -5,17 +5,17 @@ block content
     .container
         .row
             .col.s12.slot-space
-                img.slot-img(src=image.src, alt="Image")
-        h1.flow-text Edit Image
+                img.slot-img(src="/admin/image/"+ image.id, alt="Image")
+        h1.flow-text Change Image
         .row
             -
                 var actionURL = "/admin/image/" + image.id + "/edit";
-            form.col.s12(action=actionURL method="POST")
+            form.col.s12(action=actionURL method="POST" enctype="multipart/form-data")
                 .row
                     .file-field.input-field.col.s12
                         <div class="btn">
                             <span>New Image</span>
-                            <input type="file">
+                            <input name="image" type="file">
                         </div>
                         <div class="file-path-wrapper">
                             <input class="file-path validate"  placeholder="Image to be used as the face of your money jar" type="text">
