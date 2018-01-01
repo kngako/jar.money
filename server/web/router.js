@@ -9,16 +9,27 @@ module.exports = function (options) {
     var mime = require('mime');
     
     var storage = multer.diskStorage({
-        destination: function (req, file, cb) {
+        destination: function (request, file, cb) {
             cb(null, 'files/')
         },
-        filename: function (req, file, cb) {
+        filename: function (request, file, cb) {
             // TODO: Error handling...
             cb(null, file.fieldname + '-' + Date.now() + "." + mime.getExtension(file.mimetype))
         }
     });
-    var file = multer({ 
-        storage: storage
+    var imageUploads = multer({ 
+        storage: storage,
+        fileFilter: function (request, file, cb) {
+            if (request.user && file.mimetype && file.mimetype.toLowerCase().startsWith("image/")) {
+                cb(null, true);
+            } else if (request.user) {
+                // return cb(null, false)
+                return cb(new Error('Only images are allowed')); // Skips this upload...
+            } else {
+                return cb(new Error('Not authorizedx    '));
+            }
+            
+        }
     });
 
     var express = options.express;
@@ -160,7 +171,6 @@ module.exports = function (options) {
                     confirmation.user.update({
                         emailConfirmedOn: new Date()
                     }).then(() => {
-
                         return confirmation.destroy();
                     }).then(() => {
                         response.render("confirmation-success", {
@@ -339,36 +349,44 @@ module.exports = function (options) {
             }
             
         })
-        .post(file.single('image'), function(request, response, next) {
+        .post(imageUploads.single('image'), function(request, response, next) {
             console.log("************Image: ", request.file);
-            var tmpFile = request.file;
-            if(request.user && request.user.isAdmin()){
-                // TODO: Copy tmpFile to files directory...
-                db.Image.create(
-                    {
-                        src: request.file.path
-                    }
-                ).then(image => {
-                    // TODO: Remove tmpFile from system...
-                    db.Slot.create(
+            if(request.file) {
+                var tmpFile = request.file;
+                if(request.user && request.user.isAdmin()){
+                    // TODO: Copy tmpFile to files directory...
+                    db.Image.create(
                         {
-                            imageId: image.id,
-                            name: request.body.name,
-                            callToAction: request.body.callToAction,
-                            scheme: request.body.scheme,
-                            type: request.body.type,
-                            hint: request.body.hint
+                            src: request.file.path
                         }
-                    ).then(slot => {
-                        if(slot) {
-                            console.log("Slot: ", slot);
-                            response.redirect("/admin/slot/"+ slot.id);
-                        } else {
-                            console.log("Error: Failed to create slot");
+                    ).then(image => {
+                        // TODO: Remove tmpFile from system...
+                        db.Slot.create(
+                            {
+                                imageId: image.id,
+                                name: request.body.name,
+                                callToAction: request.body.callToAction,
+                                scheme: request.body.scheme,
+                                type: request.body.type,
+                                hint: request.body.hint
+                            }
+                        ).then(slot => {
+                            if(slot) {
+                                console.log("Slot: ", slot);
+                                response.redirect("/admin/slot/"+ slot.id);
+                            } else {
+                                console.log("Error: Failed to create slot");
+                                response.render("error", {
+                                    pageTitle: "Money Jar - Error"
+                                });
+                            }
+                        }).catch(error => {
+                            // TODO: Creatation 
+                            console.error("Slot Creation Error: ", error);
                             response.render("error", {
                                 pageTitle: "Money Jar - Error"
                             });
-                        }
+                        })
                     }).catch(error => {
                         // TODO: Creatation 
                         console.error("Slot Creation Error: ", error);
@@ -376,17 +394,16 @@ module.exports = function (options) {
                             pageTitle: "Money Jar - Error"
                         });
                     })
-                }).catch(error => {
-                    // TODO: Creatation 
-                    console.error("Slot Creation Error: ", error);
-                    response.render("error", {
-                        pageTitle: "Money Jar - Error"
-                    });
-                })
-                
-            } else  {
-                response.redirect('/admin');
+                    
+                } else  {
+                    response.redirect('/admin');
+                }
+            } else {
+                response.render("error", {
+                    pageTitle: "Money Jar - Upload Error"
+                });
             }
+            
             
         });
 
@@ -452,39 +469,59 @@ module.exports = function (options) {
                 response.redirect('/admin');
             }
         })
-        .post(file.single('image'), function(request, response, next) {
+        .post(imageUploads.single('image'), function(request, response, next) {
             // TODO: Create a Jar
             console.log("************Image: ", request.file);
-            if(request.user){
-                // TODO: Redirect to Add a jar...
-                db.Jar.create(
-                    {
-                        shortCode: request.body.shortCode,
-                        displayName: request.body.displayName,
-                        description: request.body.description,
-                        userId: request.user.id
-                    }
-                ).then(jar => {
-                    if(jar) {
-                        // Success... set up jar slots...
-                        response.redirect("/admin/jar/" + jar.shortCode +"/jar-slot");
-                    } else {
-                        console.error("Error: Failed to create slot");
+            if(request.file) {
+                if(request.user){
+                    // TODO: Redirect to Add a jar...
+                    db.Image.create(
+                        {
+                            src: request.file.path
+                        }
+                    ).then(image => {
+                        db.Jar.create(
+                            {
+                                imageId: image.id,
+                                shortCode: request.body.shortCode,
+                                displayName: request.body.displayName,
+                                description: request.body.description,
+                                userId: request.user.id
+                            }
+                        ).then(jar => {
+                            if(jar) {
+                                // Success... set up jar slots...
+                                response.redirect("/admin/jar/" + jar.shortCode +"/jar-slot");
+                            } else {
+                                console.error("Error: Failed to create slot");
+                                response.render("error", {
+                                    pageTitle: "Money Jar - Error"
+                                });
+                            }
+                        }).catch(error => {
+                            console.error("Error: ", error);
+                            response.render("error", {
+                                pageTitle: "Money Jar - Error"
+                            });
+                        })
+                    }).catch(error => {
+                        console.error("Error: ", error);
                         response.render("error", {
-                            pageTitle: "Money Jar - Error"
+                            pageTitle: "Money Jar - Upload Error"
                         });
-                    }
-                }).catch(error => {
-                    console.error("Error: ", error);
-                    response.render("error", {
-                        pageTitle: "Money Jar - Error"
                     });
-                })
+                    
 
-                
-            } else  {
-                response.redirect('/admin');
+                    
+                } else  {
+                    response.redirect('/admin');
+                }
+            } else {
+                response.render("error", {
+                    pageTitle: "Money Jar - Upload Error"
+                });
             }
+                
             
         });
 
@@ -780,43 +817,50 @@ module.exports = function (options) {
                 response.redirect("/admin");
             }
         })
-        .post(file.single('image'), function(request, response, next) {
+        .post(imageUploads.single('image'), function(request, response, next) {
             // TODO: Edit this jar
             // TODO: Render edited jar...
             console.log("************Image: ", request.file);
 
-            if(request.user && request.user.ownsJar(request.params.shortCode)){
-                // TODO: get the jar...
-                var shortCode = request.params.shortCode;
-                db.Jar.update(
-                    {
-                        displayName: request.body.displayName,
-                        description: request.body.description
-                    },
-                    {
-                        where: {
-                            shortCode: shortCode
+            if(request.file) {
+                if(request.user && request.user.ownsJar(request.params.shortCode)){
+                    // TODO: get the jar...
+                    var shortCode = request.params.shortCode;
+                    db.Jar.update(
+                        {
+                            displayName: request.body.displayName,
+                            description: request.body.description
+                        },
+                        {
+                            where: {
+                                shortCode: shortCode
+                            }
                         }
-                    }
-                ).then(success => {
-                    if(success) {
-                        // Success... set up jar slots...
-                        response.redirect("/admin/jar/" + shortCode +"/jar-slot");
-                    } else {
-                        console.error("Error: Failed to create slot");
+                    ).then(success => {
+                        if(success) {
+                            // Success... set up jar slots...
+                            response.redirect("/admin/jar/" + shortCode +"/jar-slot");
+                        } else {
+                            console.error("Error: Failed to create slot");
+                            response.render("error", {
+                                pageTitle: "Money Jar - Error"
+                            });
+                        }
+                    }).catch(error => {
+                        console.error("Error: ", error);
                         response.render("error", {
                             pageTitle: "Money Jar - Error"
                         });
-                    }
-                }).catch(error => {
-                    console.error("Error: ", error);
-                    response.render("error", {
-                        pageTitle: "Money Jar - Error"
-                    });
-                })
-            } else  {
-                response.redirect('/admin');
+                    })
+                } else  {
+                    response.redirect('/admin');
+                }
+            } else {
+                response.render("error", {
+                    pageTitle: "Money Jar - Upload Error"
+                });
             }
+            
         });
 
     router.route('/admin/image/:imageId/edit')
@@ -842,48 +886,49 @@ module.exports = function (options) {
                 response.redirect("/admin");
             }
         })
-        .post(file.single('image'), function(request, response, next) {
+        .post(imageUploads.single('image'), function(request, response, next) {
             // TODO: Check if user is admin or owner of image...
             // TODO: Create a slot
-            if(request.user && request.user.ownsImage(request.params.imageId))
-            {
-                var imageId = request.params.imageId;
-                db.Image.update(
-                    {
-                        src: request.file.path
-                    },
-                    {
-                        where: {
-                            id: imageId
+            if(request.file) {
+                if(request.user && request.user.ownsImage(request.params.imageId))
+                {
+                    var imageId = request.params.imageId;
+                    db.Image.update(
+                        {
+                            src: request.file.path
+                        },
+                        {
+                            where: {
+                                id: imageId
+                            }
                         }
-                    }
-                ).then(image => {
-                    response.redirect("/admin/image/" + imageId );
-                })
-                // EDIT Jar...
+                    ).then(image => {
+                        response.redirect("/admin/image/" + imageId );
+                    })
+                    // EDIT Jar...
+                } else {
+                    response.render("unauthorized", {
+                        pageTitle: "Money Jar - Unauthorized"
+                    });
+                }
             } else {
-                response.render("unauthorized", {
-                    pageTitle: "Money Jar - Unauthorized"
+                response.render("error", {
+                    pageTitle: "Money Jar - Image Change Error"
                 });
             }
-            
         });
     
     router.route('/admin/image/:imageId')
         .get(function(request, response, next) {
-            console.log("Trying to find: ", request.params.imageId)
             db.Image.findById(request.params.imageId)
             .then(image => {
-                console.log("Found Image: ", image);
                 if(image) {
                     // show image...
                     var filePath = path.resolve(image.src);
-                    console.log("Sending: ", filePath);
-                    console.log("Mime Type: ", mime.getType(filePath));
-                    response.setHeader('Content-Type', mime.getType(filePath));
                     // response.type(mime.getType(filePath));
                     response.sendFile(filePath);
-                } else {    
+                } else {  
+                    // TODO: Tell user something is wrong...  
                     next();
                 }
             })
