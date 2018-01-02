@@ -15,6 +15,12 @@ Of course the system needs a super admin so run the following to get yourself se
 node create-super-admin.js
 ```
 
+If you don't wanna set up a database then you can run this site on a sqlite db as it's already setup in config/default.json. Just set up the db/ directory in the project root directory like so
+
+```
+mkdir db
+```
+
 To run the site run this command.
 ```
 npm start
