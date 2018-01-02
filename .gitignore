@@ -66,3 +66,4 @@ config/develop.json
 config/production.json
 config/development.json
 files/
+db/database.sqlite-journal
