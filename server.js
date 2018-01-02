@@ -14,8 +14,6 @@ module.exports = function (config, db) {
     app.set("view engine", "pug");
     app.set("views", path.resolve("views"));
     
-    // configure app to use bodyParser()
-    // this will let us get the data from a POST
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
     

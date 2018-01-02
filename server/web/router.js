@@ -52,12 +52,21 @@ module.exports = function (options) {
             if(request.user){ // User is already logged in so don't go to matches again...
                 response.redirect('/admin');
             } else {
+                // TODO: Might wanna load the user from params/body...
                 response.render("signup", {
                     pageTitle: "Money Jar - Signup"
                 });
             }
         })
         .post(function(request, response, next){
+            var tmpUser = {
+                email: request.body.username,
+                firstName: request.body.firstName,
+                lastName: request.body.lastName,
+                phoneNumber: request.body.phoneNumber,
+                password: request.body.password,
+                activitedOn: Date.now() // TODO: don't activate if not through invitation...
+            }
             if(request.user){ // User is already logged in so don't go to matches again...
                 // Let them now User already registered...
                 response.render("signup", {
@@ -68,7 +77,9 @@ module.exports = function (options) {
                 if(request.body.password !== request.body.confirmPassword) { // TODO: Might do this on the database object...
                     // TODO: user flash... passwords don't match
                     response.render("signup", {
-                        pageTitle: "Money Jar - Signup"
+                        pageTitle: "Money Jar - Signup",
+                        errorMessage: "passwords don't match",
+                        user: tmpUser
                     });
                 } else {
                     db.Role.findOne({
@@ -79,14 +90,7 @@ module.exports = function (options) {
                     })
                     .then(role => {
                         // Now we can create the user account...
-                        db.User.create({
-                            email: request.body.username,
-                            firstName: request.body.firstName,
-                            lastName: request.body.lastName,
-                            phoneNumber: request.body.phoneNumber,
-                            password: request.body.password,
-                            activitedOn: Date.now() // TODO: don't activate if not through invitation...
-                        }, {
+                        db.User.create(tmpUser, {
                             include: [
                                 {
                                     association: db.User.UserRoles
@@ -97,12 +101,6 @@ module.exports = function (options) {
                             console.log("Created User: " + JSON.stringify(user)); 
                         
                             // TODO: Think about the below redundancy... 
-                            db.UserMembership.create({
-                                userId: user.id,
-                                membershipId: membership.id
-                            }).then (userMembership => {
-                                console.log("Created User membership: " + userMembership);
-                            })
             
                             var userRoles = [];
                             userRoles.push({
@@ -112,27 +110,25 @@ module.exports = function (options) {
                             db.UserRole.bulkCreate(userRoles)
                             .then(dbUserRoles => {
                                 console.log("Created User Roles: "+ JSON.stringify(dbUserRoles));
-                                // Assuming everything works... let's redirect this post to the login screen...
-                                passport.authenticate('local')(request, response, () => {
-                                    // TODO: Figure out what problems arises without saving session...
-                                    response.redirect("/admin");
-                                });
+                                // Show user a confirmation page...
+                                response.redirect('/admin/confirmation');
 
                                 // Confirm email...
                                 db.Confirmation.create({
                                     userId: user.id,
                                     sent: 0
                                 }).then(confirmation => {
-                                    email.sendConfirmationEmail(
-                                        user.firstName, 
-                                        confirmation.token, 
-                                        user.email, 
-                                        function (info) {
-                                            // Confirmation email sent successfully...
-                                            return confirmation.increment({
-                                                'sent': 1
-                                            })
-                                        });
+                                    // TODO: Bring back email features... 
+                                    // email.sendConfirmationEmail(
+                                    //     user.firstName, 
+                                    //     confirmation.token, 
+                                    //     user.email, 
+                                    //     function (info) {
+                                    //         // Confirmation email sent successfully...
+                                    //         return confirmation.increment({
+                                    //             'sent': 1
+                                    //         })
+                                    //     });
                                         // TODO: Add error callback to check what went wrong...
                                 }).catch(error => {
                                     console.error("Confirmation fial: ", error);
@@ -143,12 +139,20 @@ module.exports = function (options) {
                         })
                         .catch(error => {
                             console.error("Hanlde error: ", error);
+                            var errorMessage = "Failed to create user";
+                            if(error.errors[0].type)
+                                errorMessage = error.errors[0].type
+                            response.render("signup", {
+                                pageTitle: "Money Jar - Signup",
+                                errorMessage: errorMessage,
+                                user: tmpUser
+                            });
                         })
                     })
                     .catch(error => {
                         // TODO: Report error to user...
-                        response.render("signup", {
-                            pageTitle: "Money Jar - Signup"
+                        response.render("error", {
+                            pageTitle: "Money Jar - Signup ERROR"
                         });
                     });
                 }

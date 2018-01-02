@@ -3,9 +3,10 @@ extends templates/layout.pug
 block content
     <div id="content-root">
         <div class="container">
-            <h2 class="flow-text">Please Signup to join us.</h2>
-            <form id="signup-form">
-                <!-- Link this to the vue stuff.. -->
+            <h1 class="flow-text">Please Signup to join us.</h1>
+            if errorMessage
+                p.flow-text.red-text= errorMessage
+            form(action="/admin/signup" method="POST")
                 <div  class="row">
                     <div class="col s12 m6">
                         <label for="email">Email:</label>
@@ -43,8 +44,6 @@ block content
                         <button  class="btn waves-effect waves-light" v-on:click="attemptSignup">Sign up</button>
                     </div>
                 </div>  
-                
-            </form>
                 
         </div>
     </div>
