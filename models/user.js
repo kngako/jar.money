@@ -40,7 +40,9 @@ module.exports = function (options) {
             type: options.Sequelize.STRING,
             allowNull: false,
             set(val) {
-                this.setDataValue('password', options.bcrypt.hashSync(val, options.bcrypt.genSaltSync(9), null));
+                var hashedPassword = val != null && val.length > 0 ? options.bcrypt.hashSync(val, options.bcrypt.genSaltSync(9), null) : null;
+                console.log("%%%%%%%%- Hashed Password: ", hashedPassword);
+                this.setDataValue('password', hashedPassword);
             }
         }
 

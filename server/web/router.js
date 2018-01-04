@@ -37,6 +37,11 @@ module.exports = function (options) {
     var passport = options.passport;
     // var email = options.email;
 
+    const pug = require('pug');
+    
+    // TODO: Compile all the pug views 
+    const signupPage = pug.compileFile('views/signup.pug');
+
     var router = express.Router();
 
     router.route('/')
@@ -53,9 +58,13 @@ module.exports = function (options) {
                 response.redirect('/admin');
             } else {
                 // TODO: Might wanna load the user from params/body...
-                response.render("signup", {
-                    pageTitle: "Money Jar - Signup"
-                });
+                console.log("We are gere...")
+                response.send(signupPage({
+                    pageTitle: "Money Jar - Signup",
+                    errorMessage: null,
+                    subErrorMessage: null,
+                    user: {}
+                }))
             }
         })
         .post(function(request, response, next){
@@ -67,20 +76,20 @@ module.exports = function (options) {
                 password: request.body.password,
                 activitedOn: Date.now() // TODO: don't activate if not through invitation...
             }
+            console.log("Trying to save: ", tmpUser);
             if(request.user){ // User is already logged in so don't go to matches again...
                 // Let them now User already registered...
-                response.render("signup", {
-                    pageTitle: "Money Jar - Signup"
-                });
+                response.redirect("/admin");
             } else {
                 // TODO: Validate user input...
-                if(request.body.password !== request.body.confirmPassword) { // TODO: Might do this on the database object...
+                if((request.body.password !== request.body.confirmPassword) || request.body.password.length == 0) { // TODO: Might do this on the database object...
                     // TODO: user flash... passwords don't match
-                    response.render("signup", {
+                    response.send(signupPage({
                         pageTitle: "Money Jar - Signup",
                         errorMessage: "passwords don't match",
+                        subErrorMessage: null,
                         user: tmpUser
-                    });
+                    }));
                 } else {
                     db.Role.findOne({
                         // TODO: Handle ordering business...
@@ -140,13 +149,17 @@ module.exports = function (options) {
                         .catch(error => {
                             console.error("Hanlde error: ", error);
                             var errorMessage = "Failed to create user";
-                            if(error.errors[0].type)
-                                errorMessage = error.errors[0].type
-                            response.render("signup", {
+                            if(error.errors[0].type) {
+                                // TODO: replace "." with " "
+                                errorMessage = "invalid" + error.errors[0].path
+                                subErrorMessage = error.errors[0].message
+                            }
+                            response.send(signupPage({
                                 pageTitle: "Money Jar - Signup",
                                 errorMessage: errorMessage,
+                                subErrorMessage: subErrorMessage,
                                 user: tmpUser
-                            });
+                            }));
                         })
                     })
                     .catch(error => {
