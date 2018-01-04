@@ -13,8 +13,7 @@ module.exports = function (options) {
         },
         displayName: {
             type: options.Sequelize.STRING,
-            // defaultValue: options.Sequelize.UUIDV4,
-            unique: true
+            allowNull: false
         },
         description: {
             type: options.Sequelize.STRING,

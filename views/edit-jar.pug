@@ -2,15 +2,21 @@ extend templates/layout.pug
 
 block content
     .container
-        if jar.shortCode
+        if jar.id
             h1.flow-text Update <strong>#{jar.shortCode}</strong>  Money Jar
         else 
             h1.flow-text Create a new Money Jar
+
+        if errorMessage
+            p.flow-text.red-text= errorMessage
+        if subErrorMessage
+            p.flow-text.red-text= subErrorMessage
         .row
             -
-                var actionURL = jar.shortCode == null ? "/admin/jar" : "/admin/jar/" + jar.shortCode + "/edit";
-                var isBlank = jar.shortCode == null;
-            form.col.s12(action=actionURL method="POST")
+                //- TODO: 
+                var actionURL = jar.id == null ? "/admin/jar" : "/admin/jar/" + jar.shortCode + "/edit";
+                var isBlank = jar.id == null;
+            form.col.s12(action=actionURL method="POST" enctype="multipart/form-data")
                 .row
                     .input-field.col.s12.m6
                         input#short_code.validate(placeholder="Short Code" name="shortCode" type="text" value=jar.shortCode disabled=!isBlank)
@@ -36,7 +42,7 @@ block content
                     //- TODO: Have a submit/next button
                 .row
                     .col.s12.center
-                        if jar.shortCode
+                        if jar.id
                             <button class="btn waves-effect waves-light" type="submit" name="action">Update
                                 <i class="material-icons right">sync</i>
                             </button>
@@ -48,7 +54,7 @@ block content
         if jar.image
             .row
                 .col.s12.slot-space
-                    img.slot-img(src=jar.image.src, alt=jar.displayName)
+                    img.slot-img(src="/admin/image/"+jar.image.id, alt=jar.displayName)
                 .col.s12.center
                     br
                     a.btn(href="/admin/image/"+jar.image.id+"/edit") Change Image
