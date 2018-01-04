@@ -449,6 +449,9 @@ module.exports = function (options) {
                                 include: [
                                     {
                                         association: db.JarSlot.Slot
+                                    },
+                                    {
+                                        association: db.JarSlot.Clicks
                                     }
                                 ]
                             }
@@ -594,7 +597,6 @@ module.exports = function (options) {
                         ]
                     }
                 ).then(jarSlot => {
-                    console.log("####################Found: ", jarSlot)
                     if(jarSlot) {
                         response.render("edit-jar-slot", {
                             pageTitle: "Money Jar - Jar Slot",
@@ -632,7 +634,6 @@ module.exports = function (options) {
                         }
                     }
                 ).then(success => {
-                    console.log("&&&&&&&Updated: ", success);
                     if(success[0]) {
                         if (request.query.complete != 'true')
                             response.redirect("/admin/jar/" + shortCode);
@@ -1072,6 +1073,51 @@ module.exports = function (options) {
                 });
             })
             
+        });
+
+    router.route('/:shortCode/:jarSlotId/')
+        .get((request, response, next) => {
+            var shortCode = request.params.shortCode;
+            var ipAddress = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
+
+            // TODO: Get more express oriented IP info...
+            // app.enable('trust proxy')
+            // var ip = request.ip || request.ips;
+            db.JarSlot.findById(
+                request.params.jarSlotId,
+                {
+                    include: [
+                        {
+                            association: db.JarSlot.Slot
+                        }
+                    ]
+                }
+            )
+            .then(jarSlot => {
+                if(jarSlot) {
+                    response.redirect(jarSlot.slot.scheme + jarSlot.uri);
+                    // TODO: Create a click entity...
+                    db.Click.create(
+                        {
+                            // TODO: Populate
+                            ipAddress: ipAddress,
+                            jarSlotId: jarSlot.id
+                        }
+                    ).then(()=>{
+                        // Click stored...
+                    });
+                } else {
+                    next();
+                    // TODO: Handle errors...
+                }
+                
+            }).catch(error => {
+                // TODO: Might wanna make it redirect to he money jar...
+                // console.log("Click Error: ", error);
+                // response.redirect("/" + shortCode);
+                next();
+                // TODO: Handle errors...
+            })
         });
 
     router.use(express.static('static')); 

@@ -12,7 +12,7 @@ block content
                 p.flow-text.valign-wrapper
                     strong Copy URL
                     //- i.material-icons.left content_copy
-                a.flow-text(onclick="copyLink(event)" href="https://jar.money/"+jar.shortCode) 
+                a.flow-text(onclick="copyLink(event)" href="/"+jar.shortCode) 
                     span#jar-link= "https://jar.money/" + jar.shortCode
                     i.material-icons.left content_copy
         .row
@@ -38,6 +38,7 @@ block content
                                 th Name
                                 th Call To Action
                                 th Link
+                                th Clicks
                                 //- th 
                                     a.btn.hide-on-small-only(href="/jar-slot/") Add Jar Slot
                                     a.hide-on-med-and-up(href="/jar-slot/") Add Jar Slot
@@ -52,6 +53,7 @@ block content
                                     else
                                         td 
                                             a(href="/admin/jar/" + jar.shortCode +"/jar-slot/" + jarSlot.id) Specify link 
+                                    td= jarSlot.clicks.length
                                     //- TODO: Add the clicks...
             else
                 .center
