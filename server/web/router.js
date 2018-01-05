@@ -936,25 +936,6 @@ module.exports = function (options) {
             })
         });
 
-    router.route('/admin/open-jar/')
-        .get(function(request, response, next) {
-            // TODO: Render Jar with ID...
-            if(request.user){
-                response.render("open-jar", {
-                    pageTitle: "Money Jar - Jar",
-                    jar: {}
-                });
-            } else  {
-                response.redirect('/admin');
-            }
-            
-        })
-        .post(function(request, response, next) {
-            // TODO: Create a slot
-            // TODO: 
-            response.redirect("/admin");
-        });
-
     router.route('/admin')
         .get(function(request, response, next) { 
             if(request.user && request.user.isAdmin() ) {
@@ -1120,7 +1101,8 @@ module.exports = function (options) {
             })
         });
 
-    router.use(express.static('static')); 
+    // router.use(express.static('static')); 
+    router.use('/admin/static', express.static('static'))
     
     // router.use(function (request, response, next) {
     //     response.status(404).redirect("/missing");
