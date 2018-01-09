@@ -8,7 +8,7 @@ block content
             p.flow-text.center
                 a.flow-text(onclick="copyLink(event)" href="/admin") 
                     //- i.material-icons content_copy
-                    span#jar-link https://jar.money/brand
+                    span#jar-link https://jar.money/<span id="jar-short-code">lorem</span>
                     
             h3 to get you paid
             .container
@@ -49,3 +49,7 @@ block content
             h4 on all your accepted platforms
     .container
         p.flow-text Lead your supporters to their preferred platform to support your work. Whether it's your patreon, paypal.me, bitcoin wallet, and cash.me account, use one link to lead to them all. 
+
+block additionalScripts
+    script
+        include js/home.js
