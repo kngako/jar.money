@@ -1023,6 +1023,7 @@ module.exports = function (options) {
         .get(function(request, response, next) {
             // TODO: Show avaible jar. 
             // TODO: Show claim jar if short code isn't in the system.
+            var shortCode = request.params.shortCode;
             db.Jar.findOne(
                 {
                     where: {
@@ -1048,10 +1049,18 @@ module.exports = function (options) {
                     ]
                 }
             ).then(jar => {
-                response.render("money-jar", {
-                    pageTitle: "Money Jar - Jar",
-                    jar: jar
-                });
+                if(jar) {
+                    response.render("money-jar", {
+                        pageTitle: "Money Jar - Jar",
+                        jar: jar
+                    });
+                } else {
+                    response.render("non-existent-money-jar", {
+                        pageTitle: "Money Jar - Jar",
+                        shortCode: shortCode
+                    });
+                }
+                
             })
             
         });
