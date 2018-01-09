@@ -65,9 +65,14 @@ html(lang="en" dir="ltr")
                 .container
                     .nav-wrapper
                         a.brand-logo(href="/") Money Jar
+                        a.button-collapse(href="/admin")
+                            i.material-icons monetization_on
                         ul#nav-mobile.hide-on-med-and-down.right
                             li
-                                <a href="/admin">Open Your Jar</a>
+                                a(href="/admin") Open Your Jar
+                                    i.material-icons.left monetization_on
+                                    
+                                //- <a href="/admin"><i class="material-icons left">search</i>Open Your Jar</a>
                             //- li
                                 <a href="/explore">Explore Jars</a>
         
