@@ -1,0 +1,51 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.slot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.slot-space {
+    width: 100%;
+    height: 100px;
+    
+}
+
+.slot-btn {
+    width: 100%;
+}
+
+.jar-header {
+    font-weight: 900;
+}
+
+.call-to-action { 
+    width: 100%;
+    height: 100%;
+    
+    /* Firefox */
+    display:-moz-box;
+    -moz-box-pack:center;
+    -moz-box-align:center;
+
+    /* Safari and Chrome */
+    display:-webkit-box;
+    -webkit-box-pack:center;
+    -webkit-box-align:center;
+
+    /* W3C */
+    display:box;
+    box-pack:center;
+    box-align:center;
+}
+
+/* TODO: Specify image text color... */

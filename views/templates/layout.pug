@@ -1,30 +1,63 @@
 doctype html
-html(lang="en")
+html(lang="en" dir="ltr")
     head
         <meta charset="utf-8">
 
-        //- <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-81711306-5"></script>
-        <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-81711306-5');
-        </script>
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
 
+        //- <!-- Apple Touch Icon (at least 200x200px) -->
+        <link rel="apple-touch-icon" href="/admin/static/img/k.svg">
+
+        //- <!-- To run web application in full-screen -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        
+        //- <!-- Status Bar Style (see Supported Meta Tags below for available values) -->
+        //- <!-- Has no effect unless you have the previous meta tag -->
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+        
 
         //- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        style
+            //- include ../css/materialize.min.css
+            include ../css/site.css
+        
+        
         <link type="text/css" rel="stylesheet" href="/admin/static/css/materialize.min.css"  media="screen,projection"/>
-        <link type="text/css" rel="stylesheet" href="/admin/static/css/site.css"  media="screen,projection"/>
+        //- <link type="text/css" rel="stylesheet" href="/admin/static/css/site.css"  media="screen,projection"/>
         
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-        <link rel="icon" type="image/png" href="/admin/static/img/favicon.png"/>
+        block favicon
+            <link rel="icon" type="image/png" href="/admin/static/img/favicon.png"/>
 
         //- SEO stuff goes here...
         block seo
-            title Jar Money - Fille the Money Jar
+            title Money Jar - Lead them to the right money jar
             <meta name="description" content="The url shortener that allows you to aggregate platforms which you accept payments on">
-            //- TODO: Add facebook graph stuff
-            //- TODO: Add twitter Card stuff
+        
+        block facebookSEO
+            //- URL should be explicit and resolved
+            <meta property="og:url" content="http://jar.money" />
+            <meta property="og:type" content="website" />
+            <meta property="og:title" content="Money Jar" />
+            <meta property="og:description" content="One URL to lead to all you money jars"/>
+            //- image url should alway be resolved and rendered
+            <meta property="og:image" content="http://jar.money/static/img/k.svg" />
+            <meta property="fb:app_id" content="238540263188666" />
+
+        block twitterSEO
+            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:site" content="@kpangako" />
+            <meta name="twitter:creator" content="@kpangako" />
+        
+        //- Google Analytics and the likes: Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-81711306-5"></script>
+        <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-81711306-5');
+        </script>
+
     body
         header(role="banner")
             

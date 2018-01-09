@@ -1,5 +1,13 @@
 extend templates/layout.pug
 
+
+//- block favicon
+    link(rel="icon",  href="/admin/image/"+jar.image.id)
+
+block seo
+    title Money Jar - #{jar.displayName}
+    <meta name="description" content="#{jar.description}">
+
 block content
     .container
         if jar            
