@@ -35,7 +35,7 @@ module.exports = function (options) {
     var express = options.express;
     var db = options.db;
     var passport = options.passport;
-    // var email = options.email;
+    var email = options.email;
 
     const pug = require('pug');
     
@@ -129,16 +129,16 @@ module.exports = function (options) {
                                     sent: 0
                                 }).then(confirmation => {
                                     // TODO: Bring back email features... 
-                                    // email.sendConfirmationEmail(
-                                    //     user.firstName, 
-                                    //     confirmation.token, 
-                                    //     user.email, 
-                                    //     function (info) {
-                                    //         // Confirmation email sent successfully...
-                                    //         return confirmation.increment({
-                                    //             'sent': 1
-                                    //         })
-                                    //     });
+                                    email.sendConfirmationEmail(
+                                        user.firstName, 
+                                        confirmation.token, 
+                                        user.email, 
+                                        function (info) {
+                                            // Confirmation email sent successfully...
+                                            return confirmation.increment({
+                                                'sent': 1
+                                            });
+                                        });
                                         // TODO: Add error callback to check what went wrong...
                                 }).catch(error => {
                                     console.error("Confirmation fial: ", error);

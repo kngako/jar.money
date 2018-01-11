@@ -54,7 +54,7 @@ module.exports = function (config, db) {
                         console.log("Login Unauthorized");
                         return done(null, false, { 
                             username: username,
-                            message: 'Who are you and what are you doing here?.' 
+                            message: 'Invalid username or password.' 
                         });
                     }
                     
@@ -98,12 +98,12 @@ module.exports = function (config, db) {
     
     // ROUTES FOR OUR API
     // =============================================================================
-    // var email = require("./email.js")({
-    //     config: config
-    // });
+    var email = require("./email.js")({
+        config: config
+    });
 
     var routerOptions = {
-        // email: email,
+        email: email,
         app: app,
         express: express,
         db: db,
@@ -111,14 +111,12 @@ module.exports = function (config, db) {
         passport: passport
     }
 
-    
-
     var apiRouter = require('./server/api/router.js')(routerOptions);              // get an instance of the express Router
     var webRouter = require('./server/web/router.js')(routerOptions);
     
     // REGISTER OUR ROUTES -------------------------------
     // all of our routes will be prefixed with /api
-    app.use('/api', apiRouter);
+    app.use('/admin/api', apiRouter);
     app.use('/', webRouter);
     
     
