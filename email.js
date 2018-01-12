@@ -63,7 +63,7 @@ module.exports = function (options) {
     }
     
     email.sendConfirmationEmail = function(name, confirmationToken, to, successCallback, failureCallback) {
-        var url = config.get("server.domain") + "/confirmation/" + confirmationToken;
+        var url = config.get("server.domain") + "/admin/confirmation/" + confirmationToken;
         email.sendEmail({
             to: "<" + to + ">",
             subject: "Money Jar Confirmation",

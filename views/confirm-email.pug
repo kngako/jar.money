@@ -7,10 +7,6 @@ block content
             <p class="flow-text">Didn't get an email?</p>
             form(action="confirmEmail")
                 //- <a class="btn" v-on:click="confirmEmail">Resend confirmation</a>
-                <div class="row">
-                    <div class="col s12">
-                        <button  class="btn waves-effect waves-light">Resend confirmation</button>
-                    </div>
-                </div>  
+                a.btn.waves-effect.waves-light(href="/admin/confirmation/resend") Resend confirmation
         </div>
     </div>

@@ -68,6 +68,7 @@ module.exports = function (options) {
             }
         })
         .post(function(request, response, next){
+            console.log("346436257257: LOGIN: ", request);
             var tmpUser = {
                 email: request.body.username,
                 firstName: request.body.firstName,
@@ -120,15 +121,19 @@ module.exports = function (options) {
                             .then(dbUserRoles => {
                                 console.log("Created User Roles: "+ JSON.stringify(dbUserRoles));
                                 // Show user a confirmation page...
-                                response.render("confirm-email", {
-                                    pageTitle: "Money Jar - Confirm email"
+                                console.log('44364246256: Trying to login: ', request)
+                                passport.authenticate('local')(request, response, () => {
+                                    // TODO: Figure out what problems arises without saving session...
+                                    response.render("confirm-email", {
+                                        pageTitle: "Money Jar - Confirm email"
+                                    });
                                 });
+                                
                                 // Confirm email...
                                 db.Confirmation.create({
                                     userId: user.id,
                                     sent: 0
                                 }).then(confirmation => {
-                                    // TODO: Bring back email features... 
                                     email.sendConfirmationEmail(
                                         user.firstName, 
                                         confirmation.token, 
