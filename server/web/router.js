@@ -1113,13 +1113,27 @@ module.exports = function (options) {
     // router.use(express.static('static')); 
     router.use('/admin/static', express.static('static'))
     
-    // router.use(function (request, response, next) {
-    //     response.status(404).redirect("/missing");
-    //         response.render("money-jar", {
-    //             pageTitle: "Money Jar - Jar",
-    //             jar: jars[0]
-    //         });
-    // })
+    router.use(function (request, response, next) {
+        response.status(404);
+
+        if (request.accepts('html')) {
+            response.render("404", {
+                pageTitle: "Money Jar - 404"
+            });
+            return;
+        }
+        
+        if (request.accepts('html')) {
+            response.json({
+                message: "URL not accessible"
+            });
+            return;
+        }
+
+        
+
+        response.type('txt').send('Not found');
+    })
 
     // router.use(function (request, response, next) {
     //     response.status(500).redirect("/error");
