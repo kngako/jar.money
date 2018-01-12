@@ -943,33 +943,54 @@ module.exports = function (options) {
 
     router.route('/admin')
         .get(function(request, response, next) { 
-            if(request.user && request.user.isAdmin() ) {
-                // TODO: Renders Jars and slots...
-                db.Slot.findAll()
-                .then(slots => {
-                    db.Jar.findAll(
-                        {
-                            where: {
-                                userId: request.user.id
-                            },
-                            include: [
-                                {
-                                    association: db.Jar.JarSlots
-                                }
-                            ]
+            if(request.user) {
+                // TODO: Automatically open the jar screen if user has no jars...
+                var jarCount = -1;
+                db.Jar.count(
+                    {
+                        where: {
+                            userId: request.user.id
                         }
-                    ).then(ujars => {
-                        response.render("admin", {
-                            pageTitle: "Money Jar - Admin",
-                            slots: slots,
-                            jars: ujars
-                        });
-                    }).catch(error=> {
-                        console.error("Jar Error: ", error)
-                        response.render("error", {
-                            pageTitle: "Money Jar - Error",
-                        });
-                    })
+                    }
+                ).then(userJarCount => {
+                    jarCount = userJarCount; // Because I'm still getting used to promises
+                    // TODO: Do a joined promise...
+                    
+
+                    if(request.user.isAdmin())
+                        return db.Slot.findAll();
+                    else
+                        return null;
+                })
+                .then(slots => {
+                    if(jarCount == 0) {
+                        response.redirect("/admin/jar");
+                    } else {
+                        db.Jar.findAll(
+                            {
+                                where: {
+                                    userId: request.user.id
+                                },
+                                include: [
+                                    {
+                                        association: db.Jar.JarSlots
+                                    }
+                                ]
+                            }
+                        ).then(ujars => {
+                            response.render("admin", {
+                                pageTitle: "Money Jar - Admin",
+                                slots: slots,
+                                jars: ujars
+                            });
+                        }).catch(error=> {
+                            console.error("Jar Error: ", error)
+                            response.render("error", {
+                                pageTitle: "Money Jar - Error",
+                            });
+                        })
+                    }
+                    
                 })
                 .catch(error=> {
                     console.error("Slot Errors: ", error)
@@ -977,32 +998,6 @@ module.exports = function (options) {
                         pageTitle: "Money Jar - Error",
                     });
                 })
-            } else if(request.user){
-                // TODO: create a function to write this code...
-                db.Jar.findAll(
-                    {
-                        where: {
-                            userId: request.user.id
-                        },
-                        include: [
-                            {
-                                association: db.Jar.JarSlots
-                            }
-                        ]
-                    }
-                ).then(ujars => {
-                    response.render("admin", {
-                        pageTitle: "Money Jar - Admin",
-                        slots: null,
-                        jars: ujars
-                    });
-                }).catch(error=> {
-                    console.error("Jar Error: ", error)
-                    response.render("error", {
-                        pageTitle: "Money Jar - Error",
-                    });
-                })
-                
             } else  {
                 response.redirect('/admin/login');
             }           
