@@ -1,0 +1,32 @@
+extends templates/layout.pug
+
+block content
+    -
+        if (data)
+            var message = data.message
+        data = data == null ? {} : data;
+    .container
+        <h2 class="flow-text">Please Login</h2>
+        if message 
+            p.flow-text.red-text= message
+        form(action="/admin/login" method="POST")
+            .row
+                <label for="email">Email:</label>
+                <input id="email" type="text" name="username" value="#{data.username}"/>
+            .row
+                <label for="password">Password:</label>
+                <input id="password" type="password" name="password"/>
+            .row
+
+                <div class="col s12 m6 center">
+                    //- <button  class="btn waves-effect waves-light" v-on:click="attemptLogin">Log In</button>
+                    <button class="btn waves-effect waves-light" type="submit" name="action">Login
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+                
+                <div class="col s12 m6 center">
+                    <a class="btn-flat waves-effect waves-light" href="/admin/signup">Register</a>
+                </div>
+        //- p.center
+            a.center(href="/reset-password") forgot password

@@ -34,8 +34,11 @@ html(lang="en" dir="ltr")
             <link rel="icon" type="image/png" href="/admin/static/img/favicon.png"/>
 
         //- SEO stuff goes here...
+        -
+            var pageTitle = pageTitle == null ? "Money Jar - Lead them to the right money jar" : pageTitle
+        title= pageTitle
         block seo
-            title Money Jar - Lead them to the right money jar
+            
             <meta name="description" content="The url shortener that allows you to aggregate platforms which you accept payments on">
         
         block facebookSEO

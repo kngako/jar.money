@@ -77,10 +77,15 @@ module.exports = function (config) {
     db.Image.Slots = db.Image.hasMany(db.Slot);
     db.Slot.Image = db.Slot.belongsTo(db.Image);
 
+    db.User.Images = db.User.hasMany(db.Image);
+    db.Image.User = db.Image.belongsTo(db.User);
+    
     db.JarSlot.Clicks = db.JarSlot.hasMany(db.Click);
 
     db.LoadDB = (callback) => {
-        dbOptions.sequelize.sync()
+        dbOptions.sequelize.sync({
+            // force: true
+        })
         .then(() => {
             callback(config, db);
         })
