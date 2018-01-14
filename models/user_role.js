@@ -1,9 +1,9 @@
-module.exports = function (options) {
-    var model = options.sequelize.define("user_role", {
+module.exports = function (sequelize, DataTypes, options) {
+    var model = sequelize.define("user_role", {
         // Attributes...
         id: {
-            type: options.Sequelize.UUID,
-            defaultValue: options.Sequelize.UUIDV4,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
             unique: true
         }

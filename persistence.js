@@ -39,16 +39,16 @@ module.exports = function (config) {
         });
     
     // TODO: Import the modules...
-    db.User = require('./models/user.js')(dbOptions);
-    db.Role = require('./models/role.js')(dbOptions);
-    db.UserRole = require('./models/user_role.js')(dbOptions);
-    db.Location = require('./models/location.js')(dbOptions);
-    db.Confirmation = require('./models/confirmation.js')(dbOptions);
-    db.Jar = require('./models/jar.js')(dbOptions);
-    db.JarSlot = require('./models/jar-slot.js')(dbOptions);
-    db.Image = require('./models/image.js')(dbOptions);
-    db.Slot = require('./models/slot.js')(dbOptions);
-    db.Click = require('./models/click.js')(dbOptions);
+    db.User = require('./models/user.js')(dbOptions.sequelize, dbOptions.Sequelize, dbOptions);
+    db.Role = require('./models/role.js')(dbOptions.sequelize, dbOptions.Sequelize, dbOptions);
+    db.UserRole = require('./models/user_role.js')(dbOptions.sequelize, dbOptions.Sequelize, dbOptions);
+    db.Location = require('./models/location.js')(dbOptions.sequelize, dbOptions.Sequelize, dbOptions);
+    db.Confirmation = require('./models/confirmation.js')(dbOptions.sequelize, dbOptions.Sequelize, dbOptions);
+    db.Jar = require('./models/jar.js')(dbOptions.sequelize, dbOptions.Sequelize, dbOptions);
+    db.JarSlot = require('./models/jar-slot.js')(dbOptions.sequelize, dbOptions.Sequelize, dbOptions);
+    db.Image = require('./models/image.js')(dbOptions.sequelize, dbOptions.Sequelize, dbOptions);
+    db.Slot = require('./models/slot.js')(dbOptions.sequelize, dbOptions.Sequelize, dbOptions);
+    db.Click = require('./models/click.js')(dbOptions.sequelize, dbOptions.Sequelize, dbOptions);
     
     // Time for the associations...
     // User 1:N associations
@@ -83,9 +83,7 @@ module.exports = function (config) {
     db.JarSlot.Clicks = db.JarSlot.hasMany(db.Click);
 
     db.LoadDB = (callback) => {
-        dbOptions.sequelize.sync({
-            // force: true
-        })
+        dbOptions.sequelize.sync()
         .then(() => {
             callback(config, db);
         })

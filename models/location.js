@@ -1,38 +1,38 @@
-module.exports = function (options) {
-    var model = options.sequelize.define("location", {
+module.exports = function (sequelize, DataTypes, options) {
+    var model = sequelize.define("location", {
         id: {
-            type: options.Sequelize.BIGINT,
+            type: DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
             autoIncrement: true  
         },
         addressLine1: {
-            type: options.Sequelize.STRING
+            type: DataTypes.STRING
         },
         addressLine2: {
-            type: options.Sequelize.TEXT
+            type: DataTypes.TEXT
         },
         country: {
-            type: options.Sequelize.TEXT
+            type: DataTypes.TEXT
         },
         city: {
-            type: options.Sequelize.TEXT
+            type: DataTypes.TEXT
         },
         postalCode: {
-            type: options.Sequelize.TEXT
+            type: DataTypes.TEXT
         },
         latitude: {
-            type: options.Sequelize.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
             validate: { min: -90, max: 90 }
         },
         longitude: {
-            type: options.Sequelize.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
             validate: { min: -90, max: 90 }
         },
         googleMapsURL: {
-            type: options.Sequelize.TEXT,
+            type: DataTypes.TEXT,
             allowNull: true,
             defaultValue: null,
             validate: {

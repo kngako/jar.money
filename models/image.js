@@ -1,14 +1,14 @@
-module.exports = function (options) {
-    var model = options.sequelize.define("image", {
+module.exports = function (sequelize, DataTypes, options) {
+    var model = sequelize.define("image", {
         // Attributes...
         id: {
-            type: options.Sequelize.UUID,
-            defaultValue: options.Sequelize.UUIDV4,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
             unique: true
         },
         src: {
-            type: options.Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
     });

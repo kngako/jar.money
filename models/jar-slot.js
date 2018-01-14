@@ -1,17 +1,17 @@
-module.exports = function (options) {
-    var model = options.sequelize.define("jar_slot", {
+module.exports = function (sequelize, DataTypes, options) {
+    var model = sequelize.define("jar_slot", {
         // Attributes...
         id: {
-            type: options.Sequelize.UUID,
-            defaultValue: options.Sequelize.UUIDV4,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
             unique: true
         },
         uri: {
-            type: options.Sequelize.STRING,
+            type: DataTypes.STRING,
         },
         order: {
-            type: options.Sequelize.INTEGER,
+            type: DataTypes.INTEGER,
             defaultValue: 0
         },
     });

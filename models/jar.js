@@ -1,22 +1,22 @@
-module.exports = function (options) {
-    var model = options.sequelize.define("jar", {
+module.exports = function (sequelize, DataTypes, options) {
+    var model = sequelize.define("jar", {
         id: {
-            type: options.Sequelize.UUID,
-            defaultValue: options.Sequelize.UUIDV4,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
             unique: true
         },
         // TODO: Make displayName the primary key..
         shortCode: {
-            type: options.Sequelize.STRING,
+            type: DataTypes.STRING,
             unique: true
         },
         displayName: {
-            type: options.Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
         description: {
-            type: options.Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
     });

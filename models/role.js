@@ -1,17 +1,17 @@
-module.exports = function (options) {
-    var model = options.sequelize.define("role", {
+module.exports = function (sequelize, DataTypes, options) {
+    var model = sequelize.define("role", {
         id: {
-            type: options.Sequelize.UUID,
-            defaultValue: options.Sequelize.UUIDV4,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
             unique: true,
         },
         description: {
-            type: options.Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
         type: {
-            type: options.Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         }
     }, {

@@ -1,13 +1,13 @@
-module.exports = function (options) {
-    var model = options.sequelize.define("confirmation", {
+module.exports = function (sequelize, DataTypes, options) {
+    var model = sequelize.define("confirmation", {
         token: {
-            type: options.Sequelize.UUID,
-            defaultValue: options.Sequelize.UUIDV4,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
             unique: true
         },
         sent: {
-            type: options.Sequelize.INTEGER
+            type: DataTypes.INTEGER
         }
     }, {
         comment: "User confirmation"

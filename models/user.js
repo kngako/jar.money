@@ -1,14 +1,14 @@
-module.exports = function (options) {
-    var model = options.sequelize.define("user", {
+module.exports = function (sequelize, DataTypes, options) {
+    var model = sequelize.define("user", {
         id: {
-            type: options.Sequelize.UUID,
-            defaultValue: options.Sequelize.UUIDV4,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
             unique: true
         },
         email: {
             // make unique...
-            type: options.Sequelize.STRING,
+            type: DataTypes.STRING,
             unique: true,
             validate: {
                 isEmail: true
@@ -16,31 +16,31 @@ module.exports = function (options) {
             allowNull: false,
         },
         phoneNumber: {
-            type: options.Sequelize.STRING
+            type: DataTypes.STRING
         },
         firstName: {
-            type: options.Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
         lastName: {
-            type: options.Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
         birthday: {
-            type: options.Sequelize.DATE
+            type: DataTypes.DATE
         },
         emailConfirmedOn: {
-            type: options.Sequelize.DATE
+            type: DataTypes.DATE
         },
         activitedOn: {
-            type: options.Sequelize.DATE
+            type: DataTypes.DATE
         },
         // TODO: Set attribute to sensitive so that they dont get it...
         password: {
-            type: options.Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
             set(val) {
-                var hashedPassword = val != null && val.length > 0 ? options.bcrypt.hashSync(val, options.bcrypt.genSaltSync(9), null) : null;
+                var hashedPassword = options != null && val != null && val.length > 0 ? options.bcrypt.hashSync(val, options.bcrypt.genSaltSync(9), null) : null;
                 this.setDataValue('password', hashedPassword);
             }
         }

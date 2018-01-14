@@ -1,14 +1,14 @@
-module.exports = function (options) {
+module.exports = function (sequelize, DataTypes, options) {
     var model = options.sequelize.define("click", {
         // Attributes...
         id: {
-            type: options.Sequelize.UUID,
-            defaultValue: options.Sequelize.UUIDV4,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
             unique: true
         },
         ipAddress: {
-            type: options.Sequelize.STRING
+            type: DataTypes.STRING
         }
     });
 
