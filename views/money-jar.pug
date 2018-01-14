@@ -5,8 +5,17 @@ extend templates/layout.pug
     link(rel="icon",  href="/admin/image/"+jar.image.id)
 
 block seo
-    title Money Jar - #{jar.displayName}
     <meta name="description" content="#{jar.description}">
+
+block facebookSEO
+    //- URL should be explicit and resolved
+    <meta property="og:url" content="http://jar.money/#{jar.shortCode}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="#{jar.displayName}" />
+    <meta property="og:description" content="#{jar.description}"/>
+    //- image url should alway be resolved and rendered
+    <meta property="og:image" content="http://jar.money/admin/image/#{jar.image.id}" />
+    <meta property="fb:app_id" content="238540263188666" />
 
 block content
     .container

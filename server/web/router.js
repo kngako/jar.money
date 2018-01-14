@@ -47,6 +47,7 @@ module.exports = function (options) {
     router.route('/')
         .get(function(request, response, next) {
             response.render("home", {
+                user: request.user,
                 pageTitle: "Money Jar - Home"
             });
         });
@@ -125,6 +126,7 @@ module.exports = function (options) {
                                 passport.authenticate('local')(request, response, () => {
                                     // TODO: Figure out what problems arises without saving session...
                                     response.render("confirm-email", {
+                                        user: request.user,
                                         pageTitle: "Money Jar - Confirm email"
                                     });
                                 });
@@ -171,6 +173,7 @@ module.exports = function (options) {
                     .catch(error => {
                         // TODO: Report error to user...
                         response.render("error", {
+                            user: request.user,
                             pageTitle: "Money Jar - Signup ERROR"
                         });
                     });
@@ -197,6 +200,7 @@ module.exports = function (options) {
                         return confirmation.destroy();
                     }).then(() => {
                         response.render("confirmation-success", {
+                            user: request.user,
                             pageTitle: "Money Jar - Confirmation Success"
                         });
                         // response.redirect("/confirmation-success");
@@ -205,12 +209,14 @@ module.exports = function (options) {
                         console.error("Error Confirmation: ", error);
                         // TODO: Show error info...
                         response.render("error", {
+                            user: request.user,
                             pageTitle: "Money Jar - Error"
                         });
                     });
                 } else {
                     // TODO: Render confirmation error...
                     response.render("confirmation-failure", {
+                        user: request.user,
                         pageTitle: "Money Jar - Confirmation Failure"
                     });
                     // response.status(400).send("Match not found");
@@ -223,6 +229,7 @@ module.exports = function (options) {
             console.log("We should be here redirecting stuff...");
             if (request.user && request.user.emailConfirmedOn == null) {
                 response.render("confirm-email", {
+                    user: request.user,
                     pageTitle: "Money Jar - Confirm email"
                 });
             } else if(request.user){
@@ -238,6 +245,7 @@ module.exports = function (options) {
                 response.redirect('/admin');
             } else {
                 response.render("login", {
+                    user: request.user,
                     pageTitle: "Money Jar - Login"
                 });
             }
@@ -280,11 +288,13 @@ module.exports = function (options) {
                 )
                 .then(slot => {
                     response.render("view-slot", {
+                        user: request.user,
                         pageTitle: "Money Jar - Slot",
                         slot: slot
                     });
                 }).catch(error => {
                     response.render("error", {
+                        user: request.user,
                         pageTitle: "Money Jar - Error"
                     });
                 })
@@ -320,11 +330,13 @@ module.exports = function (options) {
                 )
                 .then(slot => {
                     response.render("edit-slot", {
+                        user: request.user,
                         pageTitle: "Money Jar - Slot",
                         slot: slot
                     });
                 }).catch(error => {
                     response.render("error", {
+                        user: request.user,
                         pageTitle: "Money Jar - Error"
                     });
                 })
@@ -356,6 +368,7 @@ module.exports = function (options) {
                     response.redirect("/admin/slot/" + slotId);
                 }).catch(error => {
                     response.render("error", {
+                        user: request.user,
                         pageTitle: "Money Jar - Error"
                     });
                 })
@@ -371,6 +384,7 @@ module.exports = function (options) {
             if(request.user && request.user.isAdmin()){
                 // TODO: Render Slot with ID...
                 response.render("edit-slot", {
+                    user: request.user,
                     pageTitle: "Money Jar - Slot",
                     slot: {}
                 });
@@ -408,6 +422,7 @@ module.exports = function (options) {
                             } else {
                                 console.log("Error: Failed to create slot");
                                 response.render("error", {
+                                    user: request.user,
                                     pageTitle: "Money Jar - Error"
                                 });
                             }
@@ -415,6 +430,7 @@ module.exports = function (options) {
                             // TODO: Creatation 
                             console.error("Slot Creation Error: ", error);
                             response.render("error", {
+                                user: request.user,
                                 pageTitle: "Money Jar - Error"
                             });
                         })
@@ -422,6 +438,7 @@ module.exports = function (options) {
                         // TODO: Creatation 
                         console.error("Slot Creation Error: ", error);
                         response.render("error", {
+                            user: request.user,
                             pageTitle: "Money Jar - Error"
                         });
                     })
@@ -431,6 +448,7 @@ module.exports = function (options) {
                 }
             } else {
                 response.render("error", {
+                    user: request.user,
                     pageTitle: "Money Jar - Upload Error"
                 });
             }
@@ -461,6 +479,7 @@ module.exports = function (options) {
                     if(jar) {
                         // TODO: get the jar...
                         response.render("view-jar", {
+                            user: request.user,
                             pageTitle: "Money Jar - Jar",
                             jar: jar
                         });
@@ -471,6 +490,7 @@ module.exports = function (options) {
                     // TODO: Creatation 
                     console.error("Access Error: ", error);
                     response.render("error", {
+                        user: request.user,
                         pageTitle: "Money Jar - Access Error"
                     });
                 })
@@ -488,6 +508,7 @@ module.exports = function (options) {
             // TODO: Check if user is authenticated
             if(request.user){
                 response.render("edit-jar", {
+                    user: request.user,
                     pageTitle: "Money Jar - Jar",
                     errorMessage: null,
                     subErrorMessage: null,
@@ -529,6 +550,7 @@ module.exports = function (options) {
                             } else {
                                 console.error("Error: Failed to create slot");
                                 response.render("error", {
+                                    user: request.user,
                                     pageTitle: "Money Jar - Error"
                                 });
                             }
@@ -547,6 +569,7 @@ module.exports = function (options) {
                                 
                             }
                             response.render("edit-jar", {
+                                user: request.user,
                                 pageTitle: "Money Jar - Jar",
                                 errorMessage: errorMessage,
                                 subErrorMessage: subErrorMessage,
@@ -556,11 +579,13 @@ module.exports = function (options) {
                     }).catch(error => {
                         console.error("Error: ", error);
                         response.render("error", {
+                            user: request.user,
                             pageTitle: "Money Jar - Upload Error"
                         });
                     });
                 } else {
                     response.render("edit-jar", {
+                        user: request.user,
                         pageTitle: "Money Jar - Jar",
                         errorMessage: "Please provide an image",
                         subErrorMessage: null,
@@ -586,6 +611,7 @@ module.exports = function (options) {
                 .then(jarSlot => {
                     if(jarSlot) {
                         response.render("edit-jar-slot", {
+                            user: request.user,
                             pageTitle: "Money Jar - Jar Slot",
                             heading: "Add new jar slot",
                             jarSlot: jarSlot
@@ -622,6 +648,7 @@ module.exports = function (options) {
                 }).catch(error => {
                     console.error("Error: ", error);
                     response.render("error", {
+                        user: request.user,
                         pageTitle: "Money Jar - Error"
                     });
                 })
@@ -670,6 +697,7 @@ module.exports = function (options) {
                             });
     
                             response.render("select-jar-slot", {
+                                user: request.user,
                                 pageTitle: "Money Jar - Jar Slot",
                                 heading: "Select jar slot",
                                 jar: jar,
@@ -679,6 +707,7 @@ module.exports = function (options) {
                         .catch(error => {
                             console.error("Select Jar Slot (Slot) Error: ", error);
                             response.render("error", {
+                                user: request.user,
                                 pageTitle: "Money Jar - Error"
                             });
                         })
@@ -690,6 +719,7 @@ module.exports = function (options) {
                 .catch(error => {
                     console.error("Select Jar Slot (Slot) Error: ", error);
                     response.render("error", {
+                        user: request.user,
                         pageTitle: "Money Jar - Error"
                     });
                 })
@@ -722,6 +752,7 @@ module.exports = function (options) {
                                 } else {
                                     console.error("Create Jar Slot Error: ", error);
                                     response.render("error", {
+                                        user: request.user,
                                         pageTitle: "Money Jar - Failed to Create Jar Slot"
                                     });
                                 }
@@ -730,6 +761,7 @@ module.exports = function (options) {
                         .catch(error => {
                             console.error("Select Jar Slot (Slot) Error: ", error);
                             response.render("error", {
+                                user: request.user,
                                 pageTitle: "Money Jar - Error"
                             });
                         })
@@ -740,6 +772,7 @@ module.exports = function (options) {
                 .catch(error => {
                     console.error("Select Jar Slot (Slot) Error: ", error);
                     response.render("error", {
+                        user: request.user,
                         pageTitle: "Money Jar - Error"
                     });
                 })             
@@ -763,6 +796,7 @@ module.exports = function (options) {
                 .then(jar => {
                     if(jar) {
                         response.render("edit-jar", {
+                            user: request.user,
                             pageTitle: "Money Jar - Jar",
                             errorMessage: null,
                             subErrorMessage: null,
@@ -774,6 +808,7 @@ module.exports = function (options) {
                 }).catch(error => {
                     console.error("Edit Jar Error: ", error);
                     response.render("error", {
+                        user: request.user,
                         pageTitle: "Money Jar - Error"
                     });
                 })
@@ -804,6 +839,7 @@ module.exports = function (options) {
                     }).catch(error => {
                         console.error("Error: ", error);
                         response.render("error", {
+                            user: request.user,
                             pageTitle: "Money Jar - Error"
                         });
                     })
@@ -812,6 +848,7 @@ module.exports = function (options) {
                 }
             } else {
                 response.render("error", {
+                    user: request.user,
                     pageTitle: "Money Jar - Upload Error"
                 });
             }
@@ -828,6 +865,7 @@ module.exports = function (options) {
                 .then(image => {
                     if(image) {
                         response.render("edit-image", {
+                            user: request.user,
                             pageTitle: "Money Jar - Image",
                             image: image
                         });
@@ -837,6 +875,7 @@ module.exports = function (options) {
                 }).catch(error => {
                     console.error("Error: ", error);
                     response.render("error", {
+                        user: request.user,
                         pageTitle: "Money Jar - Image Change Error"
                     });
                 })
@@ -873,6 +912,7 @@ module.exports = function (options) {
                 }
             } else {
                 response.render("error", {
+                    user: request.user,
                     pageTitle: "Money Jar - Image Change Error"
                 });
             }
@@ -932,6 +972,7 @@ module.exports = function (options) {
                             }
                         ).then(ujars => {
                             response.render("admin", {
+                                user: request.user,
                                 pageTitle: "Money Jar - Admin",
                                 slots: slots,
                                 jars: ujars
@@ -939,6 +980,7 @@ module.exports = function (options) {
                         }).catch(error=> {
                             console.error("Jar Error: ", error)
                             response.render("error", {
+                                user: request.user,
                                 pageTitle: "Money Jar - Error",
                             });
                         })
@@ -948,6 +990,7 @@ module.exports = function (options) {
                 .catch(error=> {
                     console.error("Slot Errors: ", error)
                     response.render("error", {
+                        user: request.user,
                         pageTitle: "Money Jar - Error",
                     });
                 })
@@ -966,6 +1009,7 @@ module.exports = function (options) {
 
     router.get('/admin/unauthorized', function(request, response){
             response.render("unauthorized", {
+                user: request.user,
                 pageTitle: "Money Jar - Unauthorized"
             });
         });
@@ -1004,11 +1048,13 @@ module.exports = function (options) {
             ).then(jar => {
                 if(jar) {
                     response.render("money-jar", {
-                        pageTitle: "Money Jar - Jar",
+                        user: request.user,
+                        pageTitle: "Money Jar - " + jar.displayName,
                         jar: jar
                     });
                 } else {
                     response.render("non-existent-money-jar", {
+                        user: request.user,
                         pageTitle: "Money Jar - Jar",
                         shortCode: shortCode
                     });
@@ -1071,6 +1117,7 @@ module.exports = function (options) {
 
         if (request.accepts('html')) {
             response.render("404", {
+                user: request.user,
                 pageTitle: "Money Jar - 404"
             });
             return;
