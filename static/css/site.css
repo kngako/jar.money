@@ -43,9 +43,9 @@ main {
     -webkit-box-align:center;
 
     /* W3C */
-    display:box;
-    box-pack:center;
-    box-align:center;
+    display:-ms-flexbox;
+    -ms-flex-align:center;
+    -ms-flex-pack:center;
 }
 
 /* TODO: Specify image text color... */
