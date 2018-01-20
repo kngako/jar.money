@@ -11,9 +11,9 @@ module.exports = function (sequelize, DataTypes, options) {
             type: DataTypes.STRING,
             allowNull: false
         },
-        webSrc: {
-            type: DataTypes.STRING
-        }
+        // webSrc: {
+        //     type: DataTypes.STRING
+        // }
     });
 
     return model;
