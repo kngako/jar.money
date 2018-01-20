@@ -369,6 +369,7 @@ module.exports = function (options) {
         .post(function(request, response, next) {
             if(request.user && request.user.isAdmin()){
                 // TODO: Edit a slot
+                console.log("Trying to update: ", request.body);
                 var slotId = request.params.slotId;
                 db.Slot.update({
                     name: request.body.name,
@@ -387,6 +388,7 @@ module.exports = function (options) {
                     // TODO: Check that this will work with hacky input... 
                     response.redirect("/admin/slot/" + slotId);
                 }).catch(error => {
+                    console.error("Update Error: ", error);
                     response.send(errorPage({
                         user: request.user,
                         pageTitle: "Money Jar - Error"
@@ -650,12 +652,20 @@ module.exports = function (options) {
             // TODO: Redirect to Add a slot...
             if(request.user){
                 var shortCode = request.params.shortCode;
-                request.user.ownsJarSlot(request.params.jarSlotId, shortCode, db)
+                
+                request.user.ownsJarSlot(request.params.jarSlotId, shortCode, db, {
+                    association: db.JarSlot.Slot
+                })
                 .then(jarSlot => {
                     if(jarSlot) {
+                        var uri = request.body.uri;     
+                        if(uri && uri.startsWith(jarSlot.slot.scheme)) {
+                            uri = uri.replace(jarSlot.slot.scheme, "");
+                        }
+                        // TODO: construct a redirectUrl and run a regex on it...
                         jarSlot.update(
                             {
-                                uri: request.body.uri,
+                                uri: uri,
                             }
                         ).then ((success) => {
                             console.log("Jarslot Update Result: ", success);
@@ -838,48 +848,38 @@ module.exports = function (options) {
                 response.redirect("/admin");
             }
         })
-        .post(imageUploads.single('image'), function(request, response, next) {
+        .post(function(request, response, next) {
             // TODO: Edit this jar
             // TODO: Render edited jar...
-            console.log("************Image: ", request.file);
-
-            if(request.file) {
-                if(request.user){
-                    var shortCode = request.params.shortCode;
-                    request.user.ownsJar(request.params.shortCode, db)
-                    .then(jar => {
-                        // TODO: Create a check if it is not owned...
-                        if(jar) {
-                            return jar.update(
-                                {
-                                    displayName: request.body.displayName,
-                                    description: request.body.description
-                                }
-                            )
-                        } else {
-                            return null
-                        }
-                        
-                    }).then( updatedJar => {
-                        console.log("Jar Update: ", updatedJar);
-                        response.redirect("/admin/jar/" + shortCode +"/jar-slot");
-                    }).catch(error => {
-                        console.error("Error: ", error);
-                        response.send(errorPage({
-                            user: request.user,
-                            pageTitle: "Money Jar - Error"
-                        }))
-                    })
-                } else  {
-                    response.redirect('/admin');
-                }
-            } else {
-                response.send(errorPage({
-                    user: request.user,
-                    pageTitle: "Money Jar - Error"
-                }))
-            }
-            
+            if(request.user){
+                var shortCode = request.params.shortCode;
+                request.user.ownsJar(request.params.shortCode, db)
+                .then(jar => {
+                    // TODO: Create a check if it is not owned...
+                    if(jar) {
+                        return jar.update(
+                            {
+                                displayName: request.body.displayName,
+                                description: request.body.description
+                            }
+                        )
+                    } else {
+                        return null
+                    }
+                    
+                }).then( updatedJar => {
+                    console.log("Jar Update: ", updatedJar);
+                    response.redirect("/admin/jar/" + shortCode +"/jar-slot");
+                }).catch(error => {
+                    console.error("Error: ", error);
+                    response.send(errorPage({
+                        user: request.user,
+                        pageTitle: "Money Jar - Error"
+                    }))
+                })
+            } else  {
+                response.redirect('/admin');
+            }            
         });
 
     router.route('/admin/image/:imageId/edit')
@@ -1120,7 +1120,12 @@ module.exports = function (options) {
                     ).then(()=>{
                         // Click stored...
                     });
-                    response.redirect(jarSlot.slot.scheme + jarSlot.uri);
+                    var uri = jarSlot.uri;
+                    if(uri && uri.startsWith(jarSlot.slot.scheme)) {
+                        uri = uri.replace(jarSlot.slot.scheme, "");
+                    }
+                    var redirectUrl = jarSlot.slot.scheme + uri;
+                    response.redirect(redirectUrl);
                     // TODO: Create a click entity...
                     
                 } else {

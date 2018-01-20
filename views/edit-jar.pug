@@ -16,7 +16,8 @@ block content
                 //- TODO: 
                 var actionURL = jar.id == null ? "/admin/jar" : "/admin/jar/" + jar.shortCode + "/edit";
                 var isBlank = jar.id == null;
-            form.col.s12(action=actionURL method="POST" enctype="multipart/form-data")
+                var encType = jar.id == null ? "multipart/form-data" : "application/x-www-form-urlencoded";
+            form.col.s12(action=actionURL method="POST" enctype=encType)
                 .row
                     .input-field.col.s12.m6
                         input#short_code.validate(placeholder="Short Code" name="shortCode" type="text" value=jar.shortCode disabled=!isBlank)

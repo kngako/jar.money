@@ -6,7 +6,8 @@ block content
         .row
             -
                 var actionURL = slot.id == null ? "/admin/slot" : "/admin/slot/" + slot.id + "/edit";
-            form.col.s12(action=actionURL method="POST" enctype="multipart/form-data")
+                var encType = slot.id == null ? "multipart/form-data" : "application/x-www-form-urlencoded";
+            form.col.s12(action=actionURL method="POST" enctype=encType)
                 .row
                     .input-field.col.s12.m6
                         <input placeholder="Name" name="name" id="name" type="text" class="validate" value=#{slot.name}>
