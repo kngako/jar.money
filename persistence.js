@@ -92,6 +92,20 @@ module.exports = function (config) {
             console.error('Unable to connect to the database:', error);
         })
     } // TODO: Turn this into a promise to be like all the other cool kids...
+
+    db.updateDatabaseFromModels = (callback) => {
+        dbOptions.sequelize.sync({
+            alter: true
+        })
+        .then(() => {
+            callback()
+            console.log("DB update successful.");
+        })
+        .catch(error => {
+            // Do the things...
+            console.error('Unable to connect to the database:', error);
+        })
+    } // TODO: Turn this into a promise to be like all the other cool kids...
     return db;
 
     
