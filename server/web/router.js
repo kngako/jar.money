@@ -1084,8 +1084,6 @@ module.exports = function (options) {
             )
             .then(jarSlot => {
                 if(jarSlot) {
-                    response.redirect(jarSlot.slot.scheme + jarSlot.uri);
-                    // TODO: Create a click entity...
                     db.Click.create(
                         {
                             // TODO: Populate
@@ -1095,6 +1093,9 @@ module.exports = function (options) {
                     ).then(()=>{
                         // Click stored...
                     });
+                    response.redirect(jarSlot.slot.scheme + jarSlot.uri);
+                    // TODO: Create a click entity...
+                    
                 } else {
                     next();
                     // TODO: Handle errors...
