@@ -3,12 +3,16 @@ extend templates/layout.pug
 block content
     .container
         h3= heading
-        .row
+        if slots.length === 0 
+            p.flow-text No jar slots to add
+        else
+            .row
             -
                 var actionURL = "/admin/jar/" + jar.shortCode + "/jar-slot";
             form.col.s12(action=actionURL method="POST")
                 .row
                     .col.s12
+                        
                         .row
                             each slot in slots
                                 .col.s12.l6

@@ -55,6 +55,10 @@ block content
                                             a(href="/admin/jar/" + jar.shortCode +"/jar-slot/" + jarSlot.id) Specify link 
                                     td= jarSlot.clicks.length
                                     //- TODO: Add the clicks...
+                    if jar.jar_slots.length == 0
+                        .center
+                            p.flow-text No jar slots. Please 
+                                a(href="/admin/jar/" + jar.shortCode +"/jar-slot/") add jar slot
             else
                 .center
                     p.flow-text You have no jar slots. Feel free to 
