@@ -1,0 +1,41 @@
+extend templates/layout.pug
+
+block content
+    .container
+        if jarSlot
+            
+            .row
+                .col.s12.m8.push-m4
+                    .row
+                        .col.s12.center
+                            p.flow-text #{jarSlot.jar.user.firstName}'s #{jarSlot.slot.name} address
+                        .col.s12
+                            .row.center
+                                .col.s12
+                                    a.flow-text.blue-text.mouse_cursor.center(href=redirectUrl, onclick="copyURI(event)")
+                                        span#jar-uri= jarSlot.uri
+                                .row
+                                    .col.s6
+                                        a.btn-flat.mouse_cursor.center(href=redirectUrl, onclick="copyURI(event)")
+                                            span copy
+                                            i.material-icons.left content_copy
+                                    .col.s6
+                                        a#jar-link.btn-flat.mouse_cursor(href=redirectUrl, onclick="openURI(event)")
+                                            span open
+                                            i.material-icons.left call_made
+                .col.s12.m4.pull-m8
+                    .center.hide-on-med-and-up
+                        p.flow-text #{jarSlot.slot.name} Address QR Code
+                    a(href=redirectUrl)!= svgImage
+                    .center.hide-on-small-only
+                        p.flow-text #{jarSlot.slot.name} Address QR Code
+                
+            .center
+                a.green-text.waves-effect.btn-flat(href="/" + jarSlot.jar.shortCode ) View other slots from #{jarSlot.jar.user.firstName}
+            br
+        else   
+            p.flow-text.red-text Can't find what you are looking for.
+
+block additionalScripts
+    script
+        include js/view-jar-slot.js

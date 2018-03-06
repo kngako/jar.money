@@ -48,4 +48,8 @@ main {
     box-align:center;
 }
 
+.mouse_cursor {
+    cursor: pointer;
+}
+
 /* TODO: Specify image text color... */

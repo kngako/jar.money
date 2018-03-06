@@ -66,8 +66,8 @@ module.exports = function (config) {
     db.User.Jars = db.User.hasMany(db.Jar);
     
     db.Jar.JarSlots = db.Jar.hasMany(db.JarSlot);
+    db.Jar.User = db.Jar.belongsTo(db.User);
     db.JarSlot.Jar = db.JarSlot.belongsTo(db.Jar);
-    // db.JarSlot.Jar = db.JarSlot.belongsTo(db.Jar);
 
     db.JarSlot.Slot = db.JarSlot.belongsTo(db.Slot); // TODO: make allow null to false...
 

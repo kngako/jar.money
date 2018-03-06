@@ -7,6 +7,7 @@ module.exports = function (options) {
     var path = require('path');
     var multer  = require('multer');
     var mime = require('mime');
+    var qr = require('qr-image');
     
     var storage = multer.diskStorage({
         destination: function (request, file, cb) {
@@ -1091,7 +1092,7 @@ module.exports = function (options) {
             
         });
 
-    router.route('/:shortCode/:jarSlotId/')
+    router.route('/:shortCode/jar-slot/:jarSlotId/')
         .get((request, response, next) => {
             var shortCode = request.params.shortCode;
             var ipAddress = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
@@ -1105,6 +1106,14 @@ module.exports = function (options) {
                     include: [
                         {
                             association: db.JarSlot.Slot
+                        },
+                        {
+                            association: db.JarSlot.Jar,
+                            include: [
+                                {
+                                    association: db.Jar.User
+                                }
+                            ]
                         }
                     ]
                 }
@@ -1119,24 +1128,39 @@ module.exports = function (options) {
                         }
                     ).then(()=>{
                         // Click stored...
-                    });
+                        console.log("Click created...");
+                    }).catch(error => {
+                        console.error("We have a problem"); 
+                    })
+
                     var uri = jarSlot.uri;
                     if(uri && uri.startsWith(jarSlot.slot.scheme)) {
                         uri = uri.replace(jarSlot.slot.scheme, "");
                     }
                     var redirectUrl = jarSlot.slot.scheme + uri;
-                    response.redirect(redirectUrl);
+
+                    if(jarSlot.slot.scheme.startsWith("http")) {
+                        response.redirect(redirectUrl);
+                    } else {
+                        var svgImage = qr.imageSync(jarSlot.uri, { type: 'svg' });
+                        response.render("view-jar-slot", {
+                            jarSlot: jarSlot,
+                            svgImage: svgImage,
+                            redirectUrl: redirectUrl
+                        })
+                    }
                     // TODO: Create a click entity...
                     
                 } else {
                     next();
-                    // TODO: Handle errors...
+                    // TODO: Hamdlle errors
                 }
                 
             }).catch(error => {
                 // TODO: Might wanna make it redirect to he money jar...
                 // console.log("Click Error: ", error);
                 // response.redirect("/" + shortCode);
+                console.error("Problems: ", error);
                 next();
                 // TODO: Handle errors...
             })

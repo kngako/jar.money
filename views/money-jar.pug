@@ -35,7 +35,7 @@ block content
                     each jarSlot in jar.jar_slots
                         if jarSlot.uri
                             -
-                                var clickURL = "/click/" + jarSlot.id
+                                var clickURL = "/" + jar.shortCode + "/jar-slot/" + jarSlot.id
                             .col.s12.l6
                                 a(href=clickURL)
                                     .row

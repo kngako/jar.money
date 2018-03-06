@@ -25,6 +25,7 @@
     "passport-local": "^1.0.0",
     "prompt": "^1.0.0",
     "pug": "^2.0.0-rc.4",
+    "qr-image": "^3.2.0",
     "sequelize": "^4.31.2",
     "sqlite3": "^3.1.13",
     "unirest": "^0.5.1"
